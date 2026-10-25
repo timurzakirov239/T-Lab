@@ -51,10 +51,10 @@ class RobustnessCheckpointTests(unittest.TestCase):
 
     def test_variable_size_split_alignment_and_equal_time_boundary(self):
         queries = [
-            {"query_id": 0, "timestamp": 1, "split": "train", "candidate_items": [1]},
-            {"query_id": 1, "timestamp": 2, "split": "train", "candidate_items": [2]},
-            {"query_id": 2, "timestamp": 3, "split": "train", "candidate_items": [3]},
-            {"query_id": 3, "timestamp": 4, "split": "validation", "candidate_items": [4]},
+            {"query_id": 0, "user_id": 1, "timestamp": 1, "split": "train", "candidate_items": [1]},
+            {"query_id": 1, "user_id": 1, "timestamp": 2, "split": "train", "candidate_items": [2]},
+            {"query_id": 2, "user_id": 2, "timestamp": 3, "split": "train", "candidate_items": [3]},
+            {"query_id": 3, "user_id": 2, "timestamp": 4, "split": "validation", "candidate_items": [4]},
         ]
         split = {"cutoff": 3, "inner_fit": [0, 1], "inner_selection": [2], "external_validation": [3]}
         actual = _validate_split(queries, split)

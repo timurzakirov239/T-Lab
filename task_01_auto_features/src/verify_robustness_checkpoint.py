@@ -178,7 +178,8 @@ def _validate_split(queries: Sequence[Mapping[str, Any]], split: Mapping[str, An
                                                 "external_validation": len(external)}}
 
 
-def _validate_membership(run: Path, task_root: Path, status: Mapping[str, Any], summary: Mapping[str, Any] | None) -> dict[str, Any]:
+def _validate_membership(run: Path, task_root: Path, status: Mapping[str, Any], summary: Mapping[str, Any] | None,
+                         *, allow_missing_metadata: bool = False) -> dict[str, Any]:
     parent = run.parent
     membership_path = parent / "membership" / "memberships.json"
     if not membership_path.is_file():
@@ -203,13 +204,14 @@ def _validate_membership(run: Path, task_root: Path, status: Mapping[str, Any], 
     if any(set(selected) & other for other in other_members):
         raise AssertionError("P005 cohort memberships are not disjoint")
     metadata_path = run / "data" / "metadata.json"
-    if not metadata_path.is_file():
+    if not metadata_path.is_file() and not allow_missing_metadata:
         raise FileNotFoundError(metadata_path)
-    metadata = _read_json(metadata_path)
-    if metadata.get("status") != "complete" or [int(x) for x in metadata.get("selected_users", [])] != selected:
-        raise AssertionError("child data metadata selected users differ from frozen membership")
-    if int(metadata.get("seed", -1)) != seed:
-        raise AssertionError("child data metadata seed differs from frozen membership")
+    if metadata_path.is_file():
+        metadata = _read_json(metadata_path)
+        if metadata.get("status") != "complete" or [int(x) for x in metadata.get("selected_users", [])] != selected:
+            raise AssertionError("child data metadata selected users differ from frozen membership")
+        if int(metadata.get("seed", -1)) != seed:
+            raise AssertionError("child data metadata seed differs from frozen membership")
     if summary:
         expected_membership_hash = summary.get("memberships_sha256")
         if expected_membership_hash and sha256(membership_path) != expected_membership_hash:
@@ -447,9 +449,11 @@ def verify_cohort(root: Path, output: Path, task_root: Path = TASK) -> dict[str,
         if not status.get("error"):
             raise AssertionError("failed cohort status lacks error reason")
         budget = _validate_attempt_budget(status, status.get("config", {}), complete=False)
+        membership = _validate_membership(run, task_root, status, None, allow_missing_metadata=True)
         report = {"status": "failed_checkpoint_verified", "run": str(run), "error": status["error"],
                   "resources": {"peak_process_rss_mb": peak, "minimum_available_system_mb": available,
                                 "limits": limits}, "fit_budget": budget,
+                  "membership": {k: v for k, v in membership.items() if k != "metadata_file"},
                   "verified_source_hashes": sources, "verified_input_hashes": inputs,
                   "metrics_recomputed": False, "failure_policy": "score outputs skipped for failed child"}
         output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
