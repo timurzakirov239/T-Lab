@@ -13,7 +13,7 @@
 
 Для каждого источника, который войдёт в итоговый отчёт, добавим проверенное название, авторов, дату, конкретный подтверждаемый тезис и место в источнике: раздел, страницу или таблицу. Отдельно отметим человеческую проверку. Проверку инструментами нельзя автоматически отмечать как проверку человеком.
 
-Собственные результаты P001–P005 связаны с конфигурациями, версиями кода и компактными проверяемыми метриками; P006 имеет отдельный заранее закреплённый test-протокол. Human verification этих результатов и источников не подтверждена пользователем.
+Собственные результаты P001–P006 связаны с конфигурациями, версиями кода и компактными проверяемыми метриками; P006 выполнен по отдельно закреплённому test-протоколу. Human verification этих результатов и источников не подтверждена пользователем.
 
 Версии датасетов и обнаруженные расхождения с документацией: [task_01_auto_features/data/DOWNLOADS.md](task_01_auto_features/data/DOWNLOADS.md).
 
@@ -27,5 +27,8 @@
 | R4 | Автоматическое развёртывание DSL и ограниченный отбор | [P004](task_01_auto_features/report/P004_AUTO_FEATURES.md), src/auto_features.py и src/auto_search.py | Ожидается |
 | R5 | Две новые development-когорты | [P005](task_01_auto_features/report/P005_ROBUSTNESS.md), [snapshot](task_01_auto_features/report/p005_snapshot/README.md) | Ожидается |
 | R6 | Методика единственного финального test | [P006 protocol](task_01_auto_features/configs/P006_PROTOCOL.md), [pre-open manifest](task_01_auto_features/configs/p006_freeze_manifest.json) | Ожидается |
+| R7 | Итоговая оценка P006:18 результатов, pooled метрики и условный bootstrap | [P006 результат](task_01_auto_features/report/P006_FINAL_TEST.md), [snapshot](task_01_auto_features/report/p006_snapshot/README.md), [рецензия](task_01_auto_features/research/P006_RESULT_REVIEW.md) | Ожидается |
+
+Для итоговой авторской проверки: [HUMAN_REVIEW.md](task_01_auto_features/report/HUMAN_REVIEW.md); общий текст — [FINAL_REPORT.md](task_01_auto_features/report/FINAL_REPORT.md). Автоматические численные проверки завершены; человеческое подтверждение остаётся открытым.
 
 Для чтения человеком: [аудит утверждений](task_01_auto_features/research/FINAL_CLAIM_AUDIT.md). Его наличие означает подготовку проверяемых оснований, а не подтверждённую человеческую проверку. Непроверенные статьи P1/P2 относятся к работе2 и не используются как обоснование метода работы1.

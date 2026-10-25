@@ -2,12 +2,15 @@
 from __future__ import annotations
 import csv
 import json
+import re
 from pathlib import Path
 import shutil
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+
+matplotlib.rcParams['svg.hashsalt']='t-lab-final-report'
 
 TASK=Path(__file__).resolve().parents[1]
 ROOT=TASK/'artifacts/p006_final_test'
@@ -204,13 +207,13 @@ def generate():
               'поэтому их user-macro значения нельзя суммировать как доли pooled.','',
               '## 8. Стоимость, воспроизводимость и ограничения','',
               'На development auto206 replay стоил108.671с в P004 и118.075/113.944с в P005; '
-              'baseline92 —24.072/21.174с в P005. Автоматизация расширила пространство и уменьшила ручной перебор, '
+              'baseline92 —24.072/21.174с в P005. Автоматизация расширила пространство и перенесла часть ручного перебора в алгоритм, '
               'но вычисление206 признаков и внутренний поиск дороже фиксированного ручного набора. '
               'Peak P004678.77MiB, P005719.88/707.50MiB. Результаты отдельных запусков не измеряют стабильную '
               'производительность между машинами. VPS для64 не потребовалась; успешного результата256 нет.','',
               'Проверены причинные префиксы, ties, mapping, exact A1/manual values, splits, frozen selection, '
-              'fit budgets, inputs/sources/outputs hashes. P006 independently recomputes все18 результатов '
-              'при трёх успешных когортах, pooled метрики и bootstrap. Компактные ranks позволяют повторить '
+              'fit budgets, inputs/sources/outputs hashes. Для P006 независимо пересчитаны все18 результатов '
+              'трёх успешных когорт, pooled метрики и bootstrap. Компактные ранги позволяют повторить '
               'проверку без датасетов и моделей; это не повтор обучения. '
               '[Воспроизведение](REPRODUCIBILITY.md), [snapshot P006](p006_snapshot/README.md), '
               '[протокол](../configs/P006_PROTOCOL.md), [preflight](../research/P006_REVIEW.md).','',
@@ -221,8 +224,9 @@ def generate():
               'Поисковый бюджет Auto больше фиксированного Manual. Отдельные операции, иные retrieval и большие '
               'когорты требуют новых development-экспериментов; текущий test после результатов не используется для подбора.','',
               '## 9. Выводы и дальнейшая работа','',
-              'Реализована проверяемая автоматизация построения и отбора признаков, конкурирующая с ручным бустингом '
-              'в пределах заданного протокола. Development показал изменение направления эффекта A1 и заметную '
+              'Реализована проверяемая автоматизация построения и отбора признаков и выполнено сравнение с ручным бустингом '
+              'в пределах заданного протокола. Преимущество основного Auto A2 на итоговом test не установлено. '
+              'Development показал изменение направления эффекта A1 и заметную '
               'нестабильность состава. Итоговая оценка выше сообщает фактический эффект A2 и его условную неопределённость; '
               'небольшие различия не превращаются в универсальное обещание качества. Union не гарантирует улучшения, '
               'а оптимизация replay и scale256 дали сохранённые отрицательные результаты.','',
@@ -241,6 +245,8 @@ def generate():
               'Проверка инструментами не является человеческой проверкой. Перед сдачей автор должен прочитать '
               'источники и воспроизвести ключевые проверки по [чек-листу](HUMAN_REVIEW.md); '
               'статус человеческой проверки остаётся «ожидается» в [SOURCES.md](../../SOURCES.md).']
+    # Readable number/unit boundaries in Russian prose; numeric values are unchanged.
+    lines=[re.sub(r'(?<=[А-Яа-яЁё])(?=\d)|(?<=\d)(?=[А-Яа-яЁё])', ' ', line) for line in lines]
     REPORT.mkdir(exist_ok=True)
     (REPORT/'FINAL_REPORT.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
     # Keep the final-test section usable as its own experiment report.
