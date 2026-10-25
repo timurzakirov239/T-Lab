@@ -30,7 +30,7 @@ def replay(engine, events, position, timestamp, monitor):
     return position
 
 
-def run(config, cohort, search, gate_only=False):
+def run(config, cohort, search, gate_only=False, gate_name='catalog_gate'):
     from catboost import CatBoostClassifier
     search_status=read(search/'run_status.json')
     if search_status['status']!='complete':raise ValueError('Search/training incomplete')
@@ -38,10 +38,12 @@ def run(config, cohort, search, gate_only=False):
     if frozen_sha!=search_status['selection_frozen_sha256']:raise ValueError('Mask freeze drift')
     if sha256(CONFIG)!=search_status['config_sha256']:raise ValueError('Config drift')
     if sha256(PROTOCOL)!=search_status['protocol_sha256']:raise ValueError('Protocol drift')
-    output=search/('catalog_gate' if gate_only else 'full_catalog')
+    if not gate_name.startswith('catalog_gate') or Path(gate_name).name!=gate_name:
+        raise ValueError('Gate attempt name must be a local catalog_gate* directory')
+    output=search/(gate_name if gate_only else 'full_catalog')
     if output.exists():raise FileExistsError(output)
     if not gate_only:
-        gate=read(search/'catalog_gate/run_status.json')
+        gate=read(search/gate_name/'run_status.json')
         if gate['status']!='complete' or gate['source_sha256']['expanded_vector_features.py']!=sha256(TASK/'src/expanded_vector_features.py'):
             raise ValueError('Full catalog requires successful exact gate with unchanged transformer')
     output.mkdir()
@@ -49,6 +51,7 @@ def run(config, cohort, search, gate_only=False):
     monitor=ResourceMonitor(config['resource_limits']);monitor.start()
     status={'experiment':'P007','cohort':cohort['id'],'stage':'gate' if gate_only else 'full_catalog',
             'status':'running','final_test_evaluated':False,'selection_frozen_sha256':frozen_sha,
+            'gate_directory':gate_name,
             'config_sha256':sha256(CONFIG),'protocol_sha256':sha256(PROTOCOL),
             'source_sha256':{name:sha256(TASK/'src'/name) for name in
                 ['expanded_vector_features.py','expanded_catalog.py','run_expanded_catalog.py','expanded_metrics.py']},
@@ -162,9 +165,10 @@ def main():
     parser.add_argument('--cohort',required=True)
     parser.add_argument('--root',type=Path,default=TASK/'artifacts/p007_expanded_search')
     parser.add_argument('--gate-only',action='store_true')
+    parser.add_argument('--gate-name',default='catalog_gate')
     args=parser.parse_args();config=read(CONFIG)
     cohort=next(c for c in config['cohorts'] if c['id']==args.cohort)
-    run(config,cohort,args.root/cohort['id'],args.gate_only)
+    run(config,cohort,args.root/cohort['id'],args.gate_only,args.gate_name)
 
 
 if __name__=='__main__':main()
