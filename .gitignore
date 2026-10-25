@@ -29,3 +29,7 @@ __pycache__/
 **/.obsidian/workspaces.json
 **/.obsidian/plugins/
 .trash/
+
+# Local submission delivery and PDF previews; published as release assets.
+/output/
+/tmp/
