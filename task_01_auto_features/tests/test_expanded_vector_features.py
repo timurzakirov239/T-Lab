@@ -95,6 +95,32 @@ class ExpandedVectorFeatureTests(unittest.TestCase):
         expected = np.concatenate([expected_uid1[:4], expected_uid2], axis=0)
         np.testing.assert_array_equal(actual, expected)
 
+    def test_many_to_many_mean_preserves_cpython_float_sum_rounding(self):
+        artist_map = {}
+        album_map = {10: (100, 101, 102)}
+        engine = _engine(artist_map, album_map)
+        empty = {"uid": np.asarray([], dtype=np.int64), "item_id": np.asarray([], dtype=np.int64),
+                 "timestamp": np.asarray([], dtype=np.int64), "event_type": np.asarray([], dtype=str)}
+        vector = FullCatalogFeatures(engine, empty)
+        edge_rows, _edge_entities, unique_entities, inverse = vector._mapping_edges["album"]
+        relation_columns = [i for i, spec in enumerate(engine.specs) if spec["path"] == "c_album"]
+        target_column = 195
+        local = relation_columns.index(target_column)
+        entity_values = np.zeros((3, len(relation_columns)), dtype=np.float64)
+        entity_values[:, local] = [0.12500000000000025,
+                                    0.125000000000001,
+                                    -0.25000000000000006]
+        vector._entity_values = lambda relation, user_id, timestamp, stats_cache: (
+            edge_rows, unique_entities, inverse, relation_columns, entity_values)
+
+        reduced = vector._build_relation_columns("album", 1, 20, {})[target_column]
+        dense_item = vector.item_to_dense[10]
+        expected = np.float32(sum(float(value) for value in entity_values[:, local]) / 3)
+        numpy_reduction = np.float32(np.mean(entity_values[:, local]))
+        self.assertEqual(int(expected.view(np.uint32)), 0x25E55555)
+        self.assertEqual(int(numpy_reduction.view(np.uint32)), 0x25E00000)
+        self.assertEqual(int(np.float32(reduced[dense_item]).view(np.uint32)), 0x25E55555)
+
     def test_event_schema_and_causal_engine_requirements(self):
         _rows, arrays, artists, albums = _fixture()
         engine = _engine(artists, albums)
