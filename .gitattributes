@@ -1,0 +1,7 @@
+# Preserve original bytes: experiment provenance uses SHA256 of saved sources.
+* -text
+*.png binary
+*.zip binary
+*.npz binary
+*.parquet binary
+*.cbm binary

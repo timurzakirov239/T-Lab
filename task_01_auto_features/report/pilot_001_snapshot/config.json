@@ -1,0 +1,26 @@
+{
+  "run_id": "pilot_001",
+  "seed": 20261025,
+  "users": 64,
+  "train_queries_per_user": 30,
+  "validation_queries_per_user": 10,
+  "max_candidates": 100,
+  "candidate_quotas": {"popular": 25, "repeat": 25, "artist": 35, "album": 15},
+  "short_window_fractions": [0.03333333333333333, 0.01, 0.1],
+  "half_life_fraction": 0.03333333333333333,
+  "model": {
+    "iterations": 120,
+    "depth": 5,
+    "learning_rate": 0.07,
+    "l2_leaf_reg": 5,
+    "thread_count": 2,
+    "loss_function": "Logloss",
+    "auto_class_weights": "Balanced",
+    "allow_writing_files": false,
+    "verbose": false,
+    "used_ram_limit": "512mb"
+  },
+  "metrics_k": [10, 20],
+  "resource_limits": {"runner_peak_rss_mb": 1100, "minimum_available_mb": 150},
+  "test_evaluation": false
+}
