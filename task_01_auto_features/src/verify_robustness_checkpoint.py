@@ -9,6 +9,7 @@ import argparse
 import hashlib
 import json
 import math
+from collections import Counter
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -216,9 +217,105 @@ def _validate_membership(run: Path, task_root: Path, status: Mapping[str, Any], 
         expected_membership_hash = summary.get("memberships_sha256")
         if expected_membership_hash and sha256(membership_path) != expected_membership_hash:
             raise AssertionError("membership SHA differs from parent summary")
-    return {"seed": seed, "selected_users": len(selected), "selected_users_sha256": digest,
+    return {"seed": seed, "selected_users": len(selected), "selected_user_ids": selected,
+            "selected_users_sha256": digest,
             "excluded_users": len(excluded), "disjoint_other_cohorts": True,
             "metadata_file": str(metadata_path)}
+
+
+def _validate_parent_cohort_plan(summary: Mapping[str, Any], membership: Mapping[str, Any],
+                                 config: Mapping[str, Any], task_root: Path) -> dict[str, Any]:
+    """Bind parent summary, frozen seeds, exclusion artifact and membership rows."""
+    seeds = [int(seed) for seed in config.get("cohort_seeds", [])]
+    users_per_cohort = int(config.get("users_per_cohort", 0))
+    entries = summary.get("cohorts", [])
+    member_rows = membership.get("cohorts", [])
+    if len(seeds) != 2 or len(set(seeds)) != 2 or users_per_cohort != 64:
+        raise AssertionError("P005 config must declare exactly two unique 64-user cohort seeds")
+    if [int(row.get("seed", -1)) for row in entries] != seeds:
+        raise AssertionError("parent summary cohort entries do not match configured seed order/count")
+    if [int(row.get("seed", -1)) for row in member_rows] != seeds:
+        raise AssertionError("membership cohort entries do not match configured seed order/count")
+    for row, seed in zip(entries, seeds):
+        if row.get("run_dir") != f"cohort_{seed}" or row.get("status") not in {"complete", "failed"}:
+            raise AssertionError(f"invalid parent cohort status/path for seed {seed}")
+        if row.get("status") == "complete" and int(row.get("exit_code", -1)) != 0:
+            raise AssertionError(f"completed cohort {seed} has nonzero child exit code")
+        if row.get("status") == "failed" and int(row.get("exit_code", 0)) == 0:
+            raise AssertionError(f"failed cohort {seed} has successful child exit code")
+    for row in member_rows:
+        selected = [int(uid) for uid in row.get("selected_users", [])]
+        if len(selected) != users_per_cohort or len(set(selected)) != users_per_cohort:
+            raise AssertionError("membership cohort selected user count differs from config")
+
+    exclusion_path = _task_path(task_root, config["exclusion_metadata"])
+    if not exclusion_path.is_file():
+        raise FileNotFoundError(exclusion_path)
+    exclusion_data = _read_json(exclusion_path)
+    expected_excluded = sorted(set(map(int, exclusion_data.get("selected_users", []))))
+    actual_excluded = sorted(set(map(int, membership.get("excluded_users", []))))
+    if actual_excluded != expected_excluded:
+        raise AssertionError("frozen membership exclusions differ from P001/P004 exclusion metadata")
+    if summary.get("exclusion_metadata_sha256") != sha256(exclusion_path):
+        raise AssertionError("exclusion metadata hash differs from parent summary")
+    return {"configured_seeds": seeds, "cohort_entries": len(entries),
+            "users_per_cohort": users_per_cohort, "excluded_users": len(actual_excluded),
+            "exclusion_metadata_sha256": sha256(exclusion_path)}
+
+
+def _validate_child_config(status: Mapping[str, Any], parent_config: Mapping[str, Any], seed: int) -> None:
+    child_config = dict(status.get("config", {}))
+    child_sampling_seed = child_config.pop("query_sampling_seed", None)
+    if child_sampling_seed is not None and int(child_sampling_seed) != seed:
+        raise AssertionError("child query_sampling_seed differs from cohort seed")
+    if int(status.get("query_sampling_seed", seed)) != seed:
+        raise AssertionError("child query_sampling_seed status differs from cohort seed")
+    if child_config != dict(parent_config):
+        raise AssertionError("child run config differs from shared P005 config outside query sampling seed")
+    if int(child_config.get("seed", -1)) != 20261025:
+        raise AssertionError("CatBoost/model seed changed across P005 cohorts")
+
+
+def _validate_cohort_query_protocol(queries: Sequence[Mapping[str, Any]], selected_users: Sequence[int],
+                                    config: Mapping[str, Any]) -> dict[str, Any]:
+    """Check per-user query limits, split-specific RAW bounds and cohort membership."""
+    boundaries = config["boundaries_raw"]
+    train_min = int(boundaries["train_query_start"])
+    train_end = int(boundaries["train_end"])
+    validation_end = int(boundaries["validation_end"])
+    max_train = int(config["train_queries_per_user"])
+    max_validation = int(config["validation_queries_per_user"])
+    max_candidates = int(config["max_candidates"])
+    allowed_users = set(map(int, selected_users))
+    counts: Counter[tuple[int, str]] = Counter()
+    for query in queries:
+        user_id = int(query["user_id"])
+        timestamp = int(query["timestamp"])
+        split = query.get("split")
+        if user_id not in allowed_users:
+            raise AssertionError(f"query {query.get('query_id')} user is outside frozen cohort")
+        candidates = query.get("candidate_items", [])
+        if len(candidates) != max_candidates:
+            raise AssertionError(f"query {query.get('query_id')} does not contain frozen K={max_candidates} candidates")
+        if split == "train":
+            if not train_min <= timestamp < train_end:
+                raise AssertionError("train query timestamp is outside frozen RAW train interval")
+            counts[(user_id, "train")] += 1
+        elif split in ("validation", "val"):
+            if not train_end <= timestamp < validation_end:
+                raise AssertionError("validation query timestamp is outside frozen RAW validation interval")
+            counts[(user_id, "validation")] += 1
+        else:
+            raise AssertionError(f"unknown query split {split!r}")
+    if any(count > max_train for (user_id, split), count in counts.items() if split == "train"):
+        raise AssertionError("train queries per user exceed frozen limit")
+    if any(count > max_validation for (user_id, split), count in counts.items() if split == "validation"):
+        raise AssertionError("validation queries per user exceed frozen limit")
+    return {"train_queries": sum(v for (u, s), v in counts.items() if s == "train"),
+            "validation_queries": sum(v for (u, s), v in counts.items() if s == "validation"),
+            "users_with_queries": len({u for u, _split in counts}),
+            "max_train_per_user": max((v for (u, s), v in counts.items() if s == "train"), default=0),
+            "max_validation_per_user": max((v for (u, s), v in counts.items() if s == "validation"), default=0)}
 
 
 def _validate_attempt_budget(status: Mapping[str, Any], config: Mapping[str, Any], *, complete: bool) -> dict[str, int]:
@@ -482,6 +579,7 @@ def verify_cohort(root: Path, output: Path, task_root: Path = TASK) -> dict[str,
                 queries.append(query)
     split = _read_json(run / "split.json")
     split_info = _validate_split(queries, split)
+    query_protocol = _validate_cohort_query_protocol(queries, membership["selected_user_ids"], status["config"])
     reported_counts = status.get("query_counts")
     if reported_counts:
         for key, actual_count in split_info["query_counts"].items():
@@ -515,6 +613,7 @@ def verify_cohort(root: Path, output: Path, task_root: Path = TASK) -> dict[str,
         raise AssertionError("complete child has no output hash ledger")
     report = {"status": "verified", "run": str(run), "seed": membership["seed"],
               "query_counts": split_info["query_counts"], "cutoff": split_info["cutoff"],
+              "query_protocol": query_protocol,
               "membership": {k: v for k, v in membership.items() if k != "metadata_file"},
               "fit_budget": budget, "winners": winners, "final_masks": masks,
               "checks": checks, "verified_prediction_count": len(checks),
@@ -538,6 +637,7 @@ def verify_parent(run: Path, output: Path, task_root: Path = TASK) -> dict[str, 
         raise ValueError("P005 parent summary is still running or incomplete")
     config_path = _task_path(task_root, summary["config_path"])
     protocol_path = _task_path(task_root, summary["protocol_path"])
+    parent_config = _read_json(config_path)
     if sha256(config_path) != summary.get("config_sha256") or sha256(protocol_path) != summary.get("protocol_sha256"):
         raise AssertionError("parent P005 config/protocol hash mismatch")
     membership = run / "membership" / "memberships.json"
@@ -558,6 +658,7 @@ def verify_parent(run: Path, output: Path, task_root: Path = TASK) -> dict[str, 
         actual = hashlib.sha256(json.dumps(sorted(users), separators=(",", ":")).encode("ascii")).hexdigest()
         if row.get("selected_users_sha256") != actual:
             raise AssertionError("cohort user membership hash mismatch")
+    plan = _validate_parent_cohort_plan(summary, memberships, parent_config, task_root)
     cohort_reports = []
     for row in summary.get("cohorts", []):
         child = run / row["run_dir"]
@@ -565,6 +666,7 @@ def verify_parent(run: Path, output: Path, task_root: Path = TASK) -> dict[str, 
         child_status = _read_json(child / "run_status.json") if (child / "run_status.json").exists() else {}
         if state != child_status.get("status"):
             raise AssertionError(f"parent/child status disagreement for {row['run_dir']}")
+        _validate_child_config(child_status, parent_config, int(row["seed"]))
         report_path = child / "verification_independent.json"
         report = verify_cohort(child, report_path, task_root)
         cohort_reports.append({"seed": int(row["seed"]), "status": report["status"],
@@ -572,7 +674,7 @@ def verify_parent(run: Path, output: Path, task_root: Path = TASK) -> dict[str, 
     report = {"status": "verified", "run": str(run), "parent_status": summary["status"],
               "cohort_count": len(cohort_reports), "excluded_users": len(excluded),
               "disjoint_cohort_user_counts": [len(users) for users in cohort_sets],
-              "membership_sha256": sha256(membership), "cohorts": cohort_reports}
+              "membership_sha256": sha256(membership), "cohort_plan": plan, "cohorts": cohort_reports}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return report

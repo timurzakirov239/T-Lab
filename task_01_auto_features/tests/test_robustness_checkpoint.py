@@ -2,6 +2,7 @@ import unittest
 
 from task_01_auto_features.src.verify_robustness_checkpoint import (
     _validate_split,
+    _validate_cohort_query_protocol,
     pick_inner_winner,
     recompute,
     validate_frozen_winner,
@@ -64,6 +65,28 @@ class RobustnessCheckpointTests(unittest.TestCase):
         bad = dict(split, inner_fit=[0, 2], inner_selection=[1])
         with self.assertRaisesRegex(ValueError, "timestamp boundary"):
             _validate_split(queries, bad)
+
+    def test_query_protocol_checks_membership_raw_bounds_and_per_user_limits(self):
+        config = {
+            "boundaries_raw": {"train_query_start": 10, "train_end": 20, "validation_end": 30},
+            "train_queries_per_user": 2,
+            "validation_queries_per_user": 1,
+            "max_candidates": 2,
+        }
+        queries = [
+            {"query_id": 0, "user_id": 7, "timestamp": 10, "split": "train", "candidate_items": [1, 2]},
+            {"query_id": 1, "user_id": 7, "timestamp": 20, "split": "validation", "candidate_items": [3, 4]},
+        ]
+        counts = _validate_cohort_query_protocol(queries, [7, 8], config)
+        self.assertEqual(counts["train_queries"], 1)
+        self.assertEqual(counts["validation_queries"], 1)
+        with self.assertRaisesRegex(AssertionError, "outside frozen cohort"):
+            _validate_cohort_query_protocol(queries, [8], config)
+
+        too_many = [dict(queries[0], query_id=2, timestamp=11),
+                    dict(queries[0], query_id=3, timestamp=12), *queries]
+        with self.assertRaisesRegex(AssertionError, "train queries per user"):
+            _validate_cohort_query_protocol(too_many, [7], config)
 
 
 if __name__ == "__main__":
