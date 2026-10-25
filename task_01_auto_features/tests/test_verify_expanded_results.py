@@ -34,11 +34,11 @@ def validation_queries(cohort: str) -> list[dict]:
     return [
         {"query_id": base, "user_id": base + 1, "timestamp": 1000,
          "split": "validation", "target_item": 50, "candidate_items": [50, 2, 3],
-         "target_is_repeat": True, "target_known_before": False,
+         "target_is_repeat": True, "target_known_before": True,
          "popularity_scores": [2.0, 2.0, 0.0]},
         {"query_id": base + 1, "user_id": base + 2, "timestamp": 1001,
          "split": "validation", "target_item": 999, "candidate_items": [4, 5],
-         "target_is_repeat": False, "target_known_before": True,
+         "target_is_repeat": False, "target_known_before": False,
          "popularity_scores": [1.0, 0.0]},
     ]
 
@@ -226,6 +226,27 @@ class VerifyExpandedResultsTests(unittest.TestCase):
             status["output_sha256"][path.name] = digest(path)
             write_json(status_path, status)
             with self.assertRaises(AssertionError):
+                verify_expanded(root, task_root=Path(temp.name) / "task_01_auto_features")
+        finally:
+            temp.cleanup()
+
+    def test_target_rank_over_20_cannot_still_appear_in_top_items(self):
+        temp, root = self._fixture()
+        try:
+            cohort = "p001"
+            path = root / cohort / "full_catalog/M_I.jsonl"
+            rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+            rows[0]["target_rank"] = 21
+            path.write_text("".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8")
+            metrics_path = root / cohort / "full_catalog/metrics.json"
+            metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+            metrics["M_I"] = summarize_ranks(rows)
+            write_json(metrics_path, metrics)
+            status_path = root / cohort / "full_catalog/run_status.json"
+            status = json.loads(status_path.read_text(encoding="utf-8"))
+            status["output_sha256"][path.name] = digest(path)
+            write_json(status_path, status)
+            with self.assertRaisesRegex(AssertionError, "outside top-20 appears"):
                 verify_expanded(root, task_root=Path(temp.name) / "task_01_auto_features")
         finally:
             temp.cleanup()

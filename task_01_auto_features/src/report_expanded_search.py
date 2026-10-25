@@ -4,6 +4,7 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 from pathlib import Path
 import shutil
 
@@ -87,8 +88,10 @@ def create_snapshot():
         gate_directory=cohort_status[cohort]['Full'].get('gate_directory','catalog_gate')
         shutil.copyfile(folder/gate_directory/'run_status.json',destination/'catalog_gate.json')
         for failed in folder.glob('catalog_gate*/run_status.json'):
-            if read(failed)['status']=='failed':
-                shutil.copyfile(failed,destination/f'{failed.parent.name}_failed.json')
+            if read(failed)['status']!='complete':
+                shutil.copyfile(failed,destination/f'{failed.parent.name}_incomplete.json')
+            if (failed.parent/'interruption.json').exists():
+                shutil.copyfile(failed.parent/'interruption.json',destination/f'{failed.parent.name}_interruption.json')
     fields=['cohort','mode','model','query_id','user_id','timestamp','candidate_count','target_rank','target_is_repeat','target_known_before']
     with (SNAPSHOT/'ranks.csv').open('x',encoding='utf-8',newline='') as stream:
         writer=csv.DictWriter(stream,fieldnames=fields,extrasaction='ignore');writer.writeheader();writer.writerows(rows)
@@ -213,6 +216,7 @@ def generate(analysis,statuses):
             '- [Компактные доказательства](p007_snapshot/README.md), [независимая проверка](p007_snapshot/verification_independent.json).',
             '- [Предыдущий итоговый отчёт P001–P006](FINAL_REPORT.md) сохранён как первая завершённая серия.',
             '- ИИ и Luna субагенты использованы для реализации/проверок; человеческая проверка источников по [чек-листу](HUMAN_REVIEW.md) остаётся ожидаемой.']
+    lines=[re.sub(r'(?<=[А-Яа-яЁё])(?=\d)|(?<=\d)(?=[А-Яа-яЁё])', ' ', line) for line in lines]
     (REPORT/'P007_EXPANDED_COMPARISON.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
     fig,axes=plt.subplots(1,2,figsize=(12,5),layout='constrained')
     import numpy as np

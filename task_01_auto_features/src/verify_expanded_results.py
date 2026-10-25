@@ -309,14 +309,25 @@ def verify_expanded(root: Path = DEFAULT_ROOT, output: Path | None = None,
                        for j in range(len(top_pairs) - 1)):
                     raise AssertionError(f"full top items are not score-desc/item-ID-asc: {cohort_id}/{label}/{i}")
                 target_rank = row.get("target_rank")
+                target_known = bool(row["target_known_before"])
+                if (target_rank is None) == target_known:
+                    raise AssertionError(f"full-catalog target presence disagrees with known-before flag: {cohort_id}/{label}/{i}")
+                if target_rank is not None and not 1 <= int(target_rank) <= int(row["candidate_count"]):
+                    raise AssertionError(f"full-catalog target rank is outside catalog: {cohort_id}/{label}/{i}")
                 if base["target_rank"] is not None:
                     if target_rank is None or int(target_rank) < int(base["target_rank"]):
                         raise AssertionError(f"full-catalog target rank improved or target disappeared: {cohort_id}/{label}/{i}")
                     _close(row.get("target_score"), base.get("target_score"),
                            f"{cohort_id}/{label}/{i} K=100/full target score")
+                target_item = int(queries[i]["target_item"])
+                target_positions = [j for j, item in enumerate(top) if int(item["item_id"]) == target_item]
                 if target_rank is not None and int(target_rank) <= 20:
-                    if not any(int(item["item_id"]) == int(queries[i]["target_item"]) for item in top):
-                        raise AssertionError(f"target in top-20 rank but missing from top_items: {cohort_id}/{label}/{i}")
+                    if target_positions != [int(target_rank) - 1]:
+                        raise AssertionError(f"target top-20 position differs from recorded rank: {cohort_id}/{label}/{i}")
+                    _close(top[target_positions[0]]["score"], row.get("target_score"),
+                           f"{cohort_id}/{label}/{i} top-item/target score")
+                elif target_positions:
+                    raise AssertionError(f"target outside top-20 appears in top_items: {cohort_id}/{label}/{i}")
             actual_full_metrics = summarize_ranks(full_rows)
             _compare_metrics(metrics_full[label], actual_full_metrics, f"{cohort_id}/{label} full metrics")
         verified_cohorts.append({"cohort": cohort_id, "queries": len(queries),
@@ -327,7 +338,8 @@ def verify_expanded(root: Path = DEFAULT_ROOT, output: Path | None = None,
 
     report = {"status": "verified", "experiment": "P007", "cohort_count": len(verified_cohorts),
               "cohorts": verified_cohorts, "tolerance": TOLERANCE,
-              "independent_metric_implementation": "expanded_metrics.summarize_ranks; no evaluator or event scan"}
+              "independent_metric_implementation": "expanded_metrics.summarize_ranks; no evaluator or event scan",
+              "full_rank_limit": "Top-20 ranks are independently checked against ordered top_items and target scores. Exact ranks beyond 20 are recorded and hash-verified but cannot be independently reconstructed because full score vectors are not retained."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return report

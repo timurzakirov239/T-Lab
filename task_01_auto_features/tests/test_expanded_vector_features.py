@@ -110,6 +110,10 @@ class ExpandedVectorFeatureTests(unittest.TestCase):
         entity_values[:, local] = [0.12500000000000025,
                                     0.125000000000001,
                                     -0.25000000000000006]
+        repeated_column = next(column for column in relation_columns
+                               if engine.specs[column]["reducer"] == "mean" and column != target_column)
+        repeated_local = relation_columns.index(repeated_column)
+        entity_values[:, repeated_local] = [0.1, 0.1, 0.1]
         vector._entity_values = lambda relation, user_id, timestamp, stats_cache: (
             edge_rows, unique_entities, inverse, relation_columns, entity_values)
 
@@ -120,6 +124,8 @@ class ExpandedVectorFeatureTests(unittest.TestCase):
         self.assertEqual(int(expected.view(np.uint32)), 0x25E55555)
         self.assertEqual(int(numpy_reduction.view(np.uint32)), 0x25E00000)
         self.assertEqual(int(np.float32(reduced[dense_item]).view(np.uint32)), 0x25E55555)
+        repeated = vector._build_relation_columns("album", 1, 20, {})[repeated_column]
+        self.assertEqual(repeated[dense_item], sum(0.1 for _ in range(3)) / 3)
 
     def test_event_schema_and_causal_engine_requirements(self):
         _rows, arrays, artists, albums = _fixture()
