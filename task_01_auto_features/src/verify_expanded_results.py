@@ -84,6 +84,34 @@ def _compare_metrics(saved: dict[str, Any], actual: dict[str, Any], label: str) 
                 raise AssertionError(f"{label}.counts.{key}: expected {value!r}, got {actual.get('counts', {}).get(key)!r}")
 
 
+def _compare_historical_validation_metrics(saved: dict[str, Any], actual: dict[str, Any], label: str) -> None:
+    """Compare the common validation statistics across legacy and P007 schemas."""
+    metric_names = {"recall@10", "ndcg@10", "recall@20", "ndcg@20"}
+    overall = actual.get("overall", {})
+    for key in ("query_count", "user_count"):
+        if key not in saved or saved[key] != overall.get(key):
+            raise AssertionError(f"{label}.{key}: expected {saved.get(key)!r}, got {overall.get(key)!r}")
+    if "candidate_recall" not in saved:
+        raise AssertionError(f"{label}.candidate_recall missing from historical metrics")
+    _close(saved["candidate_recall"], overall.get("candidate_recall"), f"{label}.candidate_recall")
+    for count_key, fraction_key in (
+        ("target_known_before_count", "target_known_before_fraction"),
+        ("repeat_count", "repeat_fraction"),
+    ):
+        if count_key not in overall or fraction_key not in saved:
+            raise AssertionError(f"{label}.{count_key}/{fraction_key} missing from metrics")
+        if overall[count_key] != saved[count_key]:
+            raise AssertionError(f"{label}.{count_key}: expected {saved[count_key]!r}, got {overall[count_key]!r}")
+        _close(saved[fraction_key], overall[count_key] / overall["query_count"], f"{label}.{fraction_key}")
+    for average in ("query_micro", "user_macro"):
+        observed = overall.get(average, {})
+        expected = saved.get(average, {})
+        if set(expected) != metric_names or set(observed) != metric_names:
+            raise AssertionError(f"{label}.{average} metric names differ")
+        for metric in sorted(metric_names):
+            _close(expected[metric], observed[metric], f"{label}.{average}.{metric}")
+
+
 def _prediction_scores(run: Path, result: dict[str, Any], expected_qids: list[int], queries: list[dict[str, Any]]) -> list[np.ndarray]:
     relative = result.get("prediction_file")
     if not relative:
@@ -114,6 +142,45 @@ def _prediction_scores(run: Path, result: dict[str, Any], expected_qids: list[in
         if offsets[index + 1] - offsets[index] != len(query["candidate_items"]):
             raise AssertionError(f"candidate offset mismatch for {result.get('label')}/{query['query_id']}")
         output.append(flat[offsets[index]:offsets[index + 1]])
+    return output
+
+
+def _popularity_scores(task_root: Path, cohort: dict[str, Any], queries_all: list[dict[str, Any]],
+                       validation_positions: list[int], validation_queries: list[dict[str, Any]]) -> list[np.ndarray]:
+    """Recover the saved causal i_listen_all scores from the frozen feature matrix."""
+    run = str(cohort["development_run"])
+    manifest = _json(task_root / "configs/p006_freeze_manifest.json").get("files", {})
+    relatives = [f"{run}/features.npy", f"{run}/feature_inputs.jsonl", f"{run}/feature_schema.json"]
+    for relative in relatives:
+        path = task_root / relative
+        if relative not in manifest or not path.is_file() or sha256(path) != manifest[relative]:
+            raise AssertionError(f"{cohort['id']} frozen popularity input hash mismatch: {relative}")
+    schema = _json(task_root / relatives[2])
+    feature_names = schema.get("feature_names", [])
+    if feature_names.count("i_listen_all") != 1:
+        raise AssertionError(f"{cohort['id']} feature schema must contain exactly one i_listen_all")
+    feature_index = feature_names.index("i_listen_all")
+    inputs = _jsonl(task_root / relatives[1])
+    if len(inputs) != len(queries_all):
+        raise AssertionError(f"{cohort['id']} feature input/query row count mismatch")
+    offsets = np.zeros(len(queries_all) + 1, dtype=np.int64)
+    for index, (query, saved) in enumerate(zip(queries_all, inputs, strict=True)):
+        if any(query.get(key) != saved.get(key) for key in ("query_id", "user_id", "timestamp", "candidate_items")):
+            raise AssertionError(f"{cohort['id']} feature input/query structure mismatch at {index}")
+        offsets[index + 1] = offsets[index] + len(query["candidate_items"])
+    matrix = np.load(task_root / relatives[0], mmap_mode="r", allow_pickle=False)
+    if matrix.ndim != 2 or matrix.shape != (int(offsets[-1]), len(feature_names)):
+        raise AssertionError(f"{cohort['id']} frozen feature matrix shape/schema mismatch")
+    output = []
+    for position, query in zip(validation_positions, validation_queries, strict=True):
+        scores = np.asarray(matrix[offsets[position]:offsets[position + 1], feature_index], dtype=np.float64)
+        if len(scores) != len(query["candidate_items"]) or not np.isfinite(scores).all():
+            raise AssertionError(f"{cohort['id']} invalid frozen popularity score block for query {query['query_id']}")
+        # P001 retained the same values directly in its query file. Keep that as
+        # a second, exact check when present; P005 stores only the frozen matrix.
+        if "popularity_scores" in query and not np.array_equal(scores, np.asarray(query["popularity_scores"], dtype=np.float64)):
+            raise AssertionError(f"{cohort['id']} query popularity scores differ from frozen feature matrix")
+        output.append(scores)
     return output
 
 
@@ -202,7 +269,8 @@ def verify_expanded(root: Path = DEFAULT_ROOT, output: Path | None = None,
             raise AssertionError(f"selection freeze records outer/full evaluation as started: {cohort_id}")
         queries_all = [json.loads(line) for line in
                        (task_root / cohort["development_queries"]).read_text(encoding="utf-8").splitlines() if line.strip()]
-        queries = [query for query in queries_all if query.get("split") == "validation"]
+        validation_positions = [i for i, query in enumerate(queries_all) if query.get("split") == "validation"]
+        queries = [queries_all[i] for i in validation_positions]
         if not queries:
             raise AssertionError(f"no validation queries for {cohort_id}")
         qids = [int(query["query_id"]) for query in queries]
@@ -228,12 +296,12 @@ def verify_expanded(root: Path = DEFAULT_ROOT, output: Path | None = None,
             rows = _jsonl(rank_path)
             _check_rank_rows(rows, queries, cohort_id, label)
             if label == "Popularity":
-                # Popularity scores are stored with each frozen development query.
-                scores = [np.asarray(query["popularity_scores"], dtype=np.float64) for query in queries]
+                scores = _popularity_scores(task_root, cohort, queries_all, validation_positions, queries)
+                reconstructed = [_rank_row(query, score, cohort_id) for query, score in zip(queries, scores, strict=True)]
             else:
                 result = final_by_label[label]
                 scores = _prediction_scores(search, result, qids, queries)
-            reconstructed = [_rank_row(query, score, cohort_id) for query, score in zip(queries, scores, strict=True)]
+                reconstructed = [_rank_row(query, score, cohort_id) for query, score in zip(queries, scores, strict=True)]
             for index, (saved, actual) in enumerate(zip(rows, reconstructed, strict=True)):
                 for field in ("target_rank", "candidate_count", "user_id", "timestamp", "target_is_repeat", "target_known_before"):
                     if saved.get(field) != actual[field]:
@@ -246,7 +314,8 @@ def verify_expanded(root: Path = DEFAULT_ROOT, output: Path | None = None,
             if label in CONTROL_ORIGINAL_LABEL:
                 original_label = CONTROL_ORIGINAL_LABEL[label]
                 original = _old_metric(task_root / cohort["development_run"] / "metrics.json", original_label)
-                _compare_metrics(original, actual_metrics, f"{cohort_id}/{label} original validation metrics")
+                _compare_historical_validation_metrics(original, actual_metrics,
+                                                       f"{cohort_id}/{label} original validation metrics")
             per_label_rows[label] = rows
             per_label_metrics[label] = actual_metrics
 
@@ -339,6 +408,7 @@ def verify_expanded(root: Path = DEFAULT_ROOT, output: Path | None = None,
     report = {"status": "verified", "experiment": "P007", "cohort_count": len(verified_cohorts),
               "cohorts": verified_cohorts, "tolerance": TOLERANCE,
               "independent_metric_implementation": "expanded_metrics.summarize_ranks; no evaluator or event scan",
+              "popularity_rank_source": "independently reconstructed from SHA-pinned frozen features.npy i_listen_all column and feature_schema.json; P001 query popularity_scores are additionally checked when available",
               "full_rank_limit": "Top-20 ranks are independently checked against ordered top_items and target scores. Exact ranks beyond 20 are recorded and hash-verified but cannot be independently reconstructed because full score vectors are not retained."}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

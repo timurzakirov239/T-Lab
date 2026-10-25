@@ -99,6 +99,7 @@ class VerifyExpandedResultsTests(unittest.TestCase):
                         "auto_features.py", "pilot_features.py", "auto_search.py", "run_auto_features.py",
                         "expanded_vector_features.py", "expanded_catalog.py", "run_expanded_catalog.py"}
         source_hashes = {}
+        frozen_hashes = {}
         for name in source_names:
             source_path = task / "src" / name
             source_path.parent.mkdir(parents=True, exist_ok=True)
@@ -109,6 +110,18 @@ class VerifyExpandedResultsTests(unittest.TestCase):
             queries = validation_queries(cohort)
             qroot.parent.mkdir(parents=True, exist_ok=True)
             qroot.write_text("".join(json.dumps(q) + "\n" for q in queries), encoding="utf-8")
+            dev_run = task / f"artifacts/dev_{cohort}"
+            dev_run.mkdir(parents=True, exist_ok=True)
+            with (dev_run / "feature_inputs.jsonl").open("w", encoding="utf-8") as stream:
+                stream.write("".join(json.dumps({key: q[key] for key in
+                    ("query_id", "user_id", "timestamp", "candidate_items")}) + "\n" for q in queries))
+            feature_names = ["i_listen_all"]
+            write_json(dev_run / "feature_schema.json", {"feature_names": feature_names})
+            feature_values = np.concatenate([np.asarray(q["popularity_scores"], dtype=np.float32)
+                                             for q in queries]).reshape(-1, 1)
+            np.save(dev_run / "features.npy", feature_values)
+            for name in ("features.npy", "feature_inputs.jsonl", "feature_schema.json"):
+                frozen_hashes[f"artifacts/dev_{cohort}/{name}"] = digest(dev_run / name)
             search = root / cohort
             (search / "ranks100").mkdir(parents=True)
             (search / "predictions").mkdir()
@@ -171,10 +184,18 @@ class VerifyExpandedResultsTests(unittest.TestCase):
             # Create the frozen original-control metric sources consumed by verifier.
             old_status = {"final_models": []}
             for label in CONTROLS:
+                current = summarize_ranks(rows_by_label[label])["overall"]
+                historical = {"query_count": current["query_count"], "user_count": current["user_count"],
+                              "candidate_recall": current["candidate_recall"],
+                              "target_known_before_count": current["target_known_before_count"],
+                              "target_known_before_fraction": current["target_known_before_count"] / current["query_count"],
+                              "repeat_count": current["repeat_count"],
+                              "repeat_fraction": current["repeat_count"] / current["query_count"],
+                              "query_micro": current["query_micro"], "user_macro": current["user_macro"]}
                 old_status["final_models"].append({"label": ORIGINAL_LABELS[label],
-                    "metrics": {"by_split": {"validation": rows_by_label[label] and summarize_ranks(rows_by_label[label])}}})
-            dev_run = next(row["development_run"] for row in config["cohorts"] if row["id"] == cohort)
+                    "metrics": {"by_split": {"validation": historical}}})
             write_json(task / f"{dev_run}/metrics.json", old_status)
+        write_json(task / "configs/p006_freeze_manifest.json", {"files": frozen_hashes})
         return temp, root
 
     def test_verifies_three_cohorts_and_all_rank_metrics(self):
@@ -195,6 +216,42 @@ class VerifyExpandedResultsTests(unittest.TestCase):
             path.write_text(path.read_text(encoding="utf-8").splitlines()[0] + "\n", encoding="utf-8")
             with self.assertRaises(AssertionError):
                 verify_expanded(root, task_root=Path(temp.name) / "task_01_auto_features")
+        finally:
+            temp.cleanup()
+
+    def test_historical_metric_schema_is_compared_and_mismatch_rejected(self):
+        temp, root = self._fixture()
+        try:
+            task = Path(temp.name) / "task_01_auto_features"
+            status_path = task / "artifacts/dev_p001/metrics.json"
+            status = json.loads(status_path.read_text(encoding="utf-8"))
+            metric = status["final_models"][2]["metrics"]["by_split"]["validation"]
+            metric["candidate_recall"] = 0.75
+            write_json(status_path, status)
+            with self.assertRaisesRegex(AssertionError, "candidate_recall"):
+                verify_expanded(root, task_root=task)
+        finally:
+            temp.cleanup()
+
+    def test_popularity_uses_frozen_matrix_when_query_scores_are_absent(self):
+        temp, root = self._fixture()
+        try:
+            task = Path(temp.name) / "task_01_auto_features"
+            queries_path = task / "artifacts/queries_p001.jsonl"
+            queries = [json.loads(line) for line in queries_path.read_text(encoding="utf-8").splitlines()]
+            for query in queries:
+                query.pop("popularity_scores")
+            queries_path.write_text("".join(json.dumps(q) + "\n" for q in queries), encoding="utf-8")
+            # Query files are not the frozen-input boundary for this synthetic case;
+            # the matrix and structural feature_inputs remain pinned and authoritative.
+            result = verify_expanded(root, output=Path(temp.name) / "report.json", task_root=task)
+            self.assertEqual(result["status"], "verified")
+            with self.assertRaisesRegex(AssertionError, "target_rank differs"):
+                path = root / "p001/ranks100/Popularity.jsonl"
+                rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+                rows[0]["target_rank"] = 1
+                path.write_text("".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8")
+                verify_expanded(root, output=Path(temp.name) / "report2.json", task_root=task)
         finally:
             temp.cleanup()
 
