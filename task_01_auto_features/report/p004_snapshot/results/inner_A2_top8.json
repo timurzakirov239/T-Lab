@@ -1,0 +1,213 @@
+{
+  "label": "inner_A2_top8",
+  "stage": "inner",
+  "columns": [
+    4,
+    5,
+    18,
+    30,
+    86,
+    115,
+    134,
+    190
+  ],
+  "spec_ids": [
+    "u_events_short",
+    "u_listen_short",
+    "i_last_age",
+    "d_last_age",
+    "d_events_w2011171",
+    "c_album_events_w2011171_mean",
+    "d_listen_share_all",
+    "c_artist_events_trend_w2011171_max"
+  ],
+  "feature_count": 8,
+  "training": {
+    "queries_requested": 943,
+    "queries_with_target": 244,
+    "queries_missing_target": 699,
+    "target_coverage": 0.25874867444326616,
+    "candidate_rows_examined": 94300,
+    "candidate_rows_used": 24400,
+    "positive_rows": 244
+  },
+  "fit_seconds": 0.471407,
+  "predict_evaluate_seconds": 0.102917,
+  "importance_fit_only": [
+    8.151377906305864,
+    8.081962291999645,
+    14.652877708288468,
+    18.732921084442058,
+    18.710239696123512,
+    12.76600814759536,
+    8.03358513387029,
+    10.871028031374786
+  ],
+  "metrics": {
+    "overall": {
+      "query_count": 406,
+      "user_count": 41,
+      "target_known_before_count": 360,
+      "target_known_before_fraction": 0.8866995073891626,
+      "repeat_count": 216,
+      "repeat_fraction": 0.5320197044334976,
+      "candidate_recall": 0.25862068965517243,
+      "query_micro": {
+        "recall@10": 0.11576354679802955,
+        "ndcg@10": 0.066370433512065,
+        "recall@20": 0.16995073891625614,
+        "ndcg@20": 0.08013233301313066
+      },
+      "user_macro": {
+        "recall@10": 0.1382416805534515,
+        "ndcg@10": 0.07910930468175825,
+        "recall@20": 0.2054745713812522,
+        "ndcg@20": 0.09621415989010224
+      }
+    },
+    "by_split": {
+      "train": {
+        "query_count": 406,
+        "user_count": 41,
+        "target_known_before_count": 360,
+        "target_known_before_fraction": 0.8866995073891626,
+        "repeat_count": 216,
+        "repeat_fraction": 0.5320197044334976,
+        "candidate_recall": 0.25862068965517243,
+        "query_micro": {
+          "recall@10": 0.11576354679802955,
+          "ndcg@10": 0.066370433512065,
+          "recall@20": 0.16995073891625614,
+          "ndcg@20": 0.08013233301313066
+        },
+        "user_macro": {
+          "recall@10": 0.1382416805534515,
+          "ndcg@10": 0.07910930468175825,
+          "recall@20": 0.2054745713812522,
+          "ndcg@20": 0.09621415989010224
+        }
+      },
+      "validation": {
+        "query_count": 0,
+        "user_count": 0,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": null,
+        "repeat_count": 0,
+        "repeat_fraction": null,
+        "candidate_recall": null,
+        "query_micro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        },
+        "user_macro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        }
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 216,
+        "user_count": 38,
+        "target_known_before_count": 216,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 216,
+        "repeat_fraction": 1.0,
+        "candidate_recall": 0.4351851851851852,
+        "query_micro": {
+          "recall@10": 0.21296296296296297,
+          "ndcg@10": 0.12275796040659719,
+          "recall@20": 0.3101851851851852,
+          "ndcg@20": 0.14757120553963288
+        },
+        "user_macro": {
+          "recall@10": 0.20287840814156607,
+          "ndcg@10": 0.11625546428483596,
+          "recall@20": 0.29476532239690134,
+          "ndcg@20": 0.13947133634250167
+        }
+      },
+      "new": {
+        "query_count": 190,
+        "user_count": 34,
+        "target_known_before_count": 144,
+        "target_known_before_fraction": 0.7578947368421053,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.05789473684210526,
+        "query_micro": {
+          "recall@10": 0.005263157894736842,
+          "ndcg@10": 0.0022667187267020688,
+          "recall@20": 0.010526315789473684,
+          "ndcg@20": 0.003464983193528137
+        },
+        "user_macro": {
+          "recall@10": 0.0012254901960784314,
+          "ndcg@10": 0.0005277898995997464,
+          "recall@20": 0.0027734778121775022,
+          "ndcg@20": 0.0008802206251368254
+        }
+      },
+      "warm": {
+        "query_count": 360,
+        "user_count": 41,
+        "target_known_before_count": 360,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 216,
+        "repeat_fraction": 0.6,
+        "candidate_recall": 0.2916666666666667,
+        "query_micro": {
+          "recall@10": 0.13055555555555556,
+          "ndcg@10": 0.07485110001638441,
+          "recall@20": 0.19166666666666668,
+          "ndcg@20": 0.09037146445369737
+        },
+        "user_macro": {
+          "recall@10": 0.1456021355809267,
+          "ndcg@10": 0.08391492762724154,
+          "recall@20": 0.21644536093104488,
+          "ndcg@20": 0.10193361524014649
+        }
+      },
+      "cold": {
+        "query_count": 46,
+        "user_count": 18,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": 0.0,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 406,
+      "users": 41,
+      "target_known_before": 360,
+      "target_not_known_before": 46,
+      "repeat_targets": 216,
+      "new_targets": 190,
+      "targets_in_candidates": 105,
+      "targets_missing_from_candidates": 301
+    }
+  },
+  "prediction_file": "predictions\\inner_A2_top8.npz",
+  "prediction_sha256": "e60d83de01180142386c232fcce14ba9836c4bdb7b4ed1d7b878c6442a0c7f50",
+  "model_file": "models\\inner_A2_top8.cbm",
+  "model_sha256": "b85a7d525ad7e2f7834788217f00d5b3e1732e39c153d94ba87c9faa3acb3b54"
+}
