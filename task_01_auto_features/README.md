@@ -4,6 +4,8 @@
 
 Дополнительная серия **P007** по запросу пользователя: новые Random206, Permutation206, Stable206, ForwardGroups66 и сравнение K100 с полным доступным каталогом трёх когорт. [Результаты и ограничения](report/P007_EXPANDED_COMPARISON.md), [команды проверки](report/P007_REPRODUCIBILITY.md), [чек-лист автора](report/P007_HUMAN_REVIEW.md). Все 1 531 прежних validation queries/158 пользователей; Full не означает оценку всех 10 000 пользователей Yambda. P006 и его первичный вывод сохранены.
 
+**P008 завершён:** проверили три способа подготовки обучающих конкурентов при фиксированных признаках. Full NDCG20 UIDC: baseline 0,069154 → Uniform 0,060863 / HybridHit 0,068288 / HybridWarm 0,009811. Основной прирост не подтверждён; расширение train ухудшило ранжирование. [Отчёт и разбор](report/P008_SAMPLED_TRAINING.md), [воспроизводимость](report/P008_REPRODUCIBILITY.md), [проверка автора](report/P008_HUMAN_REVIEW.md). Те же 1 531 development queries/158 пользователей, cohort-local Full; прежний test сохранён.
+
 - [Итоговый отчёт](report/FINAL_REPORT.md) — постановка, признаки, пилот P001, сравнения, отрицательные результаты, итоговый test и ограничения.
 - [Проверка и воспроизведение](report/REPRODUCIBILITY.md), [чек-лист автора](report/HUMAN_REVIEW.md), [итоговый snapshot](report/p006_snapshot/README.md).
 - P006:173 пользователя/1693 запроса, NDCG20 Manual0.073912 против Auto A2 0.073679. Прирост не подтверждён; основной метод после test не меняется.

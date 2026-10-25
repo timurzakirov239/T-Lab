@@ -62,3 +62,13 @@ if ($LASTEXITCODE -ne 0) { throw "P008 snapshot verification failed with exit co
 Первый вызов создаёт `report/p008_snapshot/` (если каталог ещё отсутствует), `P008_SAMPLED_TRAINING.md`, `p008_comparison.png`, `p008_comparison.svg` и `p008_portable_verification.json`. Snapshot не включает event histories, sampled matrices, training records/payloads, model files или prediction score vectors. Он содержит frozen stage statuses, общий `all_fits_frozen.json`, `training_frozen.json`, rank CSV, metrics, paired contrasts и hashes; ledger подтверждает заморозку всех 18 новых fits до validation scoring. Второй вызов только сверяет snapshot manifest и полностью пересчитывает pooled/cohort metrics и 29 paired contrasts с NumPy и `expanded_metrics`; он не читает модели или events.
 
 Если stage завершился `failed` либо verifier не `verified`, report generation не считать успешным. Не редактировать результаты в уже созданном snapshot; для новой версии нужен отдельный versioned output location и соответствующее изменение процесса до запуска.
+
+## Сохранённая проверка завершённого P008
+
+Фактический P008 завершён: независимый verifier `verified`; компактный snapshot содержит 30 файлов включая manifest и 27 558 rank rows. Переносимый пересчёт подтверждает 18 pooled metric groups, 54 cohort groups и 29 paired comparisons.
+
+Первый isolated receipt: [p008_isolated_verification.json](p008_isolated_verification.json). После уточнения формулировок отчёта окончательный reporter проверен в новой отдельной папке: [p008_isolated_verification_v2.json](p008_isolated_verification_v2.json). Копировались только два Python sources и 30 файлов snapshot; datasets, histories, matrices, models и predictions не копировались, PYTHONPATH очищен, user site отключён. V2 фиксирует SHA обоих исходников; numerical snapshot между проверками не менялся.
+
+[Read-only ревью результата](../research/P008_RESULT_REVIEW.md) подтвердило primary/secondary числа и границы интерпретации. [72 P006 SHA](p008_frozen_input_verification.json) сохранились; P006 не запускался. SVG графика приведён к строкам без хвостовых пробелов; содержимое графика не менялось.
+
+Сводные показатели P008 и отрицательный результат расширения train находятся в [отчёте](P008_SAMPLED_TRAINING.md). Человеческая проверка остаётся ожидаемой в [чек-листе](P008_HUMAN_REVIEW.md); автоматические PASS не заменяют её.

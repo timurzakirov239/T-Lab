@@ -1,6 +1,6 @@
 # P008 — read-only review of completed results
 
-Date: 2026-10-25  
+Date: 2026-10-25
 Review type: read-only consistency and interpretation review; this is not human source verification.
 
 ## Scope and integrity checks
