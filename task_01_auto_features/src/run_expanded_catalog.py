@@ -100,19 +100,26 @@ def run(config, cohort, search, gate_only=False):
                 catalog=np.asarray(sorted(engine._items),dtype=np.int64)
                 if not set(q['candidate_items']).issubset(set(catalog.tolist())):
                     raise AssertionError('Original candidates outside full causal catalog')
-                all_features=vector.transform(q['user_id'],catalog.tolist(),q['timestamp'])
                 # Recomputed scores for every original candidate must be identical.
-                at=np.searchsorted(catalog,q['candidate_items'])
-                if all_features[at].tobytes()!=expected.tobytes():
-                    raise AssertionError('Full vs K100 feature gate failed')
                 for label in old_scores:
-                    predicted=scorers[label](all_features[np.ix_(at,columns[label])])
+                    predicted=scorers[label](actual[:,columns[label]])
                     if not np.array_equal(predicted,old_scores[label][j]):
                         raise AssertionError(f'Score transfer drift: {label}/{q["query_id"]}')
+                original_position={item:idx for idx,item in enumerate(q['candidate_items'])}
+                matched=set()
                 def transform(_engine,uid,item_ids,timestamp):
-                    return all_features[np.searchsorted(catalog,item_ids)]
+                    values=vector.transform(uid,item_ids,timestamp)
+                    for local,item in enumerate(item_ids):
+                        if item in original_position:
+                            index=original_position[item]
+                            if values[local].tobytes()!=expected[index].tobytes():
+                                raise AssertionError('Chunk/full vs K100 feature gate failed')
+                            matched.add(item)
+                    return values
                 evaluated=evaluate_full_catalog(engine,q['user_id'],q['timestamp'],q['target_item'],scorers,
                     columns=columns,chunk_size=config['catalog_chunk'],transform_fn=transform,monitor=monitor)
+                if matched!=set(q['candidate_items']):
+                    raise AssertionError('Full evaluation missed an original candidate')
                 catalog_sizes.append(evaluated['catalog_size'])
                 for label,ranked in evaluated['models'].items():
                     before=old_rows[label][j]['target_rank']
@@ -122,7 +129,7 @@ def run(config, cohort, search, gate_only=False):
                         'cohort':cohort['id'],'candidate_count':evaluated['catalog_size'],**ranked}
                     streams[label].write(json.dumps(row,separators=(',',':'))+'\n')
                 status['progress']['catalog_rows_scored']+=evaluated['catalog_size']
-                del all_features,evaluated
+                del evaluated
             status['progress']['queries_completed']=j+1
             monitor.check()
             if time.perf_counter()>next_log:

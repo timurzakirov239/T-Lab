@@ -85,9 +85,19 @@ class FullCatalogFeatures:
         self._window_end = {width: 0 for width in self._widths}
         self._user_positions: dict[int, tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
         self._last_query_timestamp: int | None = None
+        self._last_count_timestamp: int | None = None
+        self._active_query_key: tuple[int, int] | None = None
+        self._active_pair_all: np.ndarray | None = None
+        self._active_pair_recent: dict[int, np.ndarray] = {}
+        self._active_user_values: dict[int, float] = {}
+        self._active_relation_values: dict[int, np.ndarray] = {}
         self._mapping_edges = {
             "artist": self._edges(engine.artist_map),
             "album": self._edges(engine.album_map),
+        }
+        self._mapping_degree = {
+            relation: np.bincount(edges[0], minlength=len(self.item_ids)).astype(np.float64)
+            for relation, edges in self._mapping_edges.items()
         }
 
     def _edges(self, mapping: Mapping[int, Sequence[int]]) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
@@ -199,6 +209,51 @@ class FullCatalogFeatures:
                     raise ValueError(f"unsupported entity operator: {spec['op']}")
         return edge_rows, unique_entities, inverse, values
 
+    def _build_relation_columns(self, relation: str, user_id: int, timestamp: int,
+                                stats_cache: dict[tuple[int, str, int | str], float]) -> dict[int, np.ndarray]:
+        edge_rows, _unique, inverse, entity_values = self._entity_values(
+            relation, user_id, timestamp, stats_cache)
+        columns = [i for i, spec in enumerate(self.engine.specs) if spec["path"] == f"c_{relation}"]
+        reduced_columns: dict[int, np.ndarray] = {}
+        if not len(edge_rows):
+            return {column: np.zeros(len(self.item_ids), dtype=np.float64) for column in columns}
+        mapped_values = entity_values[inverse]
+        degree = self._mapping_degree[relation]
+        for column in columns:
+            reducer = self.engine.specs[column]["reducer"]
+            if reducer == "max":
+                reduced = np.full(len(self.item_ids), -np.inf, dtype=np.float64)
+                np.maximum.at(reduced, edge_rows, mapped_values[:, column])
+                reduced[degree == 0] = 0.0
+            else:
+                reduced = np.zeros(len(self.item_ids), dtype=np.float64)
+                np.add.at(reduced, edge_rows, mapped_values[:, column])
+                np.divide(reduced, degree, out=reduced, where=degree > 0)
+            reduced_columns[column] = reduced
+        return reduced_columns
+
+    def _prepare_query(self, user_id: int, timestamp: int) -> None:
+        key = (user_id, timestamp)
+        if self._active_query_key == key:
+            return
+        if self._last_count_timestamp != timestamp:
+            self._advance_item_counts(timestamp)
+            self._last_count_timestamp = timestamp
+        self._active_query_key = key
+        self._active_pair_all = self._pair_counts(user_id, timestamp)
+        self._active_pair_recent = {width: self._pair_counts(user_id, timestamp, width)
+                                    for width in self._widths}
+        self._active_user_values = {}
+        stats_cache: dict[tuple[int, str, int | str], float] = {}
+        for column, spec in enumerate(self.engine.specs):
+            if spec["path"] == "u":
+                self._active_user_values[column] = self.engine._one_value(
+                    spec, user_id, 0, timestamp, (), (), stats_cache)
+        self._active_relation_values = {}
+        for relation in ("artist", "album"):
+            self._active_relation_values.update(
+                self._build_relation_columns(relation, user_id, timestamp, stats_cache))
+
     def transform(self, uid: int, item_ids: Sequence[int], timestamp: int) -> np.ndarray:
         timestamp = int(timestamp)
         self.engine._assert_query_time(timestamp)
@@ -213,28 +268,27 @@ class FullCatalogFeatures:
         requested_dense = np.fromiter((self.item_to_dense.get(int(item), -1) for item in requested_items),
                                       dtype=np.int64, count=len(requested_items))
         valid = requested_dense >= 0
-        self._advance_item_counts(timestamp)
-        pair_all = self._pair_counts(user_id, timestamp)
-        pair_recent = {width: self._pair_counts(user_id, timestamp, width) for width in self._widths}
-        stats_cache: dict[tuple[int, str, int | str], float] = {}
-
-        # User-level values are shared by all candidates in a query.
-        for column, spec in enumerate(self.engine.specs):
-            if spec["path"] == "u":
-                output[:, column] = self.engine._one_value(spec, user_id, 0, timestamp, (), (), stats_cache)
+        self._prepare_query(user_id, timestamp)
 
         # Item and pair paths are vectorized over the complete requested pool.
         for column, spec in enumerate(self.engine.specs):
             path, op = spec["path"], spec["op"]
+            if path == "u":
+                output[:, column] = self._active_user_values[column]
+                continue
             if path in ("i_artist", "i_album"):
                 relation = "artist" if path == "i_artist" else "album"
-                mapping = self.engine.artist_map if relation == "artist" else self.engine.album_map
-                output[:, column] = [len(mapping.get(int(item), ())) for item in requested_items]
+                degree = self._mapping_degree[relation]
+                output[:, column] = np.where(valid, degree[np.maximum(requested_dense, 0)], 0.0)
+                continue
+            if path.startswith("c_"):
+                values = self._active_relation_values[column]
+                output[:, column] = np.where(valid, values[np.maximum(requested_dense, 0)], 0.0)
                 continue
             if path not in ("i", "d"):
                 continue
-            source = self._all_counts if path == "i" else pair_all
-            recent_source = self._window_counts if path == "i" else pair_recent
+            source = self._all_counts if path == "i" else self._active_pair_all
+            recent_source = self._window_counts if path == "i" else self._active_pair_recent
             if op == "age":
                 if path == "i":
                     age = np.full(len(self.item_ids), -1.0, dtype=np.float64)
@@ -275,33 +329,6 @@ class FullCatalogFeatures:
                     raise ValueError(f"unsupported direct feature operation: {op}")
                 default = 0.5 if op == "share" else 0.0
                 output[:, column] = np.where(valid, values[np.maximum(requested_dense, 0)], default)
-
-        # C columns: evaluate each mapped entity once, then reduce its values
-        # over the fixed snapshot edges for all requested items.
-        for relation in ("artist", "album"):
-            edge_rows, _unique, inverse, entity_values = self._entity_values(
-                relation, user_id, timestamp, stats_cache)
-            mapping = self.engine.artist_map if relation == "artist" else self.engine.album_map
-            edge_columns = [i for i, spec in enumerate(self.engine.specs) if spec["path"] == f"c_{relation}"]
-            if not edge_columns:
-                continue
-            if len(edge_rows):
-                mapped_values = entity_values[inverse]
-                degree = np.bincount(edge_rows, minlength=len(self.item_ids)).astype(np.float64)
-                for column in edge_columns:
-                    reducer = self.engine.specs[column]["reducer"]
-                    if reducer == "max":
-                        reduced = np.full(len(self.item_ids), -np.inf, dtype=np.float64)
-                        np.maximum.at(reduced, edge_rows, mapped_values[:, column])
-                        reduced[degree == 0] = 0.0
-                    else:
-                        reduced = np.zeros(len(self.item_ids), dtype=np.float64)
-                        np.add.at(reduced, edge_rows, mapped_values[:, column])
-                        np.divide(reduced, degree, out=reduced, where=degree > 0)
-                    output[:, column] = np.where(valid, reduced[np.maximum(requested_dense, 0)], 0.0)
-            else:
-                for column in edge_columns:
-                    output[:, column] = 0.0
 
         self._last_query_timestamp = timestamp
         result = output.astype(np.float32)
