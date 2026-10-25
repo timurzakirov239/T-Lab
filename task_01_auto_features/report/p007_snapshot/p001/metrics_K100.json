@@ -1,0 +1,947 @@
+{
+  "M_I": {
+    "overall": {
+      "query_count": 499,
+      "user_count": 52,
+      "candidate_recall": 0.2605210420841683,
+      "target_known_before_count": 429,
+      "repeat_count": 334,
+      "query_micro": {
+        "recall@10": 0.11022044088176353,
+        "ndcg@10": 0.06523108520806609,
+        "recall@20": 0.1623246492985972,
+        "ndcg@20": 0.07836645873594472
+      },
+      "user_macro": {
+        "recall@10": 0.10576923076923077,
+        "ndcg@10": 0.06259675292081726,
+        "recall@20": 0.15865384615384615,
+        "ndcg@20": 0.07598119257861038
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 334,
+        "user_count": 48,
+        "candidate_recall": 0.37425149700598803,
+        "target_known_before_count": 334,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.16467065868263472,
+          "ndcg@10": 0.09745602251145202,
+          "recall@20": 0.23952095808383234,
+          "ndcg@20": 0.11638767873076844
+        },
+        "user_macro": {
+          "recall@10": 0.17743055555555554,
+          "ndcg@10": 0.10469972344114735,
+          "recall@20": 0.2630539021164021,
+          "ndcg@20": 0.1265163507524616
+        }
+      },
+      "new": {
+        "query_count": 165,
+        "user_count": 47,
+        "candidate_recall": 0.030303030303030304,
+        "target_known_before_count": 95,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.006060606060606061,
+          "ndcg@20": 0.0014022922009682374
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.002127659574468085,
+          "ndcg@20": 0.000492294070552679
+        }
+      },
+      "warm": {
+        "query_count": 429,
+        "user_count": 49,
+        "candidate_recall": 0.30303030303030304,
+        "target_known_before_count": 429,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.1282051282051282,
+          "ndcg@10": 0.07587485202523304,
+          "recall@20": 0.1888111888111888,
+          "ndcg@20": 0.09115352659495668
+        },
+        "user_macro": {
+          "recall@10": 0.12575315840621962,
+          "ndcg@10": 0.07575089046239993,
+          "recall@20": 0.19158568189180433,
+          "ndcg@20": 0.09236196862648437
+        }
+      },
+      "cold": {
+        "query_count": 70,
+        "user_count": 33,
+        "candidate_recall": 0.0,
+        "target_known_before_count": 0,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 499,
+      "users": 52,
+      "targets_in_candidates": 130,
+      "targets_missing_from_candidates": 369
+    }
+  },
+  "M_UIDC": {
+    "overall": {
+      "query_count": 499,
+      "user_count": 52,
+      "candidate_recall": 0.2605210420841683,
+      "target_known_before_count": 429,
+      "repeat_count": 334,
+      "query_micro": {
+        "recall@10": 0.11823647294589178,
+        "ndcg@10": 0.06104178499886906,
+        "recall@20": 0.18236472945891782,
+        "ndcg@20": 0.07728599120724346
+      },
+      "user_macro": {
+        "recall@10": 0.11634615384615385,
+        "ndcg@10": 0.059538174450837804,
+        "recall@20": 0.1778846153846154,
+        "ndcg@20": 0.07512636463925862
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 334,
+        "user_count": 48,
+        "candidate_recall": 0.37425149700598803,
+        "target_known_before_count": 334,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.17664670658682635,
+          "ndcg@10": 0.09119715782765168,
+          "recall@20": 0.2694610778443114,
+          "ndcg@20": 0.11465710017361426
+        },
+        "user_macro": {
+          "recall@10": 0.19461805555555556,
+          "ndcg@10": 0.09482826633955312,
+          "recall@20": 0.2890376984126984,
+          "ndcg@20": 0.11871092811944482
+        }
+      },
+      "new": {
+        "query_count": 165,
+        "user_count": 47,
+        "candidate_recall": 0.030303030303030304,
+        "target_known_before_count": 95,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.006060606060606061,
+          "ndcg@20": 0.0016378069965292106
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.002127659574468085,
+          "ndcg@20": 0.0005749747966538718
+        }
+      },
+      "warm": {
+        "query_count": 429,
+        "user_count": 49,
+        "candidate_recall": 0.30303030303030304,
+        "target_known_before_count": 429,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.13752913752913754,
+          "ndcg@10": 0.07100198301733254,
+          "recall@20": 0.21212121212121213,
+          "ndcg@20": 0.08989675900329717
+        },
+        "user_macro": {
+          "recall@10": 0.14017654680919986,
+          "ndcg@10": 0.071300565560583,
+          "recall@20": 0.21114350502105605,
+          "ndcg@20": 0.08928998460894193
+        }
+      },
+      "cold": {
+        "query_count": 70,
+        "user_count": 33,
+        "candidate_recall": 0.0,
+        "target_known_before_count": 0,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 499,
+      "users": 52,
+      "targets_in_candidates": 130,
+      "targets_missing_from_candidates": 369
+    }
+  },
+  "Original_A1": {
+    "overall": {
+      "query_count": 499,
+      "user_count": 52,
+      "candidate_recall": 0.2605210420841683,
+      "target_known_before_count": 429,
+      "repeat_count": 334,
+      "query_micro": {
+        "recall@10": 0.10821643286573146,
+        "ndcg@10": 0.06398814059615288,
+        "recall@20": 0.1743486973947896,
+        "ndcg@20": 0.0808041972108109
+      },
+      "user_macro": {
+        "recall@10": 0.10384615384615385,
+        "ndcg@10": 0.06140400414900054,
+        "recall@20": 0.1701923076923077,
+        "ndcg@20": 0.07834559389744487
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 334,
+        "user_count": 48,
+        "candidate_recall": 0.37425149700598803,
+        "target_known_before_count": 334,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.16167664670658682,
+          "ndcg@10": 0.09559904837568947,
+          "recall@20": 0.25748502994011974,
+          "ndcg@20": 0.12002968920669126
+        },
+        "user_macro": {
+          "recall@10": 0.17370205026455024,
+          "ndcg@10": 0.10229916271523555,
+          "recall@20": 0.27669477513227514,
+          "ndcg@20": 0.1287421000374809
+        }
+      },
+      "new": {
+        "query_count": 165,
+        "user_count": 47,
+        "candidate_recall": 0.030303030303030304,
+        "target_known_before_count": 95,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.006060606060606061,
+          "ndcg@20": 0.0014022922009682374
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.002127659574468085,
+          "ndcg@20": 0.000492294070552679
+        }
+      },
+      "warm": {
+        "query_count": 429,
+        "user_count": 49,
+        "candidate_recall": 0.30303030303030304,
+        "target_known_before_count": 429,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.1258741258741259,
+          "ndcg@10": 0.07442909593818248,
+          "recall@20": 0.20279720279720279,
+          "ndcg@20": 0.09398903125453296
+        },
+        "user_macro": {
+          "recall@10": 0.12575315840621965,
+          "ndcg@10": 0.07478239807963202,
+          "recall@20": 0.20326368642695175,
+          "ndcg@20": 0.09459561601531133
+        }
+      },
+      "cold": {
+        "query_count": 70,
+        "user_count": 33,
+        "candidate_recall": 0.0,
+        "target_known_before_count": 0,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 499,
+      "users": 52,
+      "targets_in_candidates": 130,
+      "targets_missing_from_candidates": 369
+    }
+  },
+  "Original_A2": {
+    "overall": {
+      "query_count": 499,
+      "user_count": 52,
+      "candidate_recall": 0.2605210420841683,
+      "target_known_before_count": 429,
+      "repeat_count": 334,
+      "query_micro": {
+        "recall@10": 0.1282565130260521,
+        "ndcg@10": 0.06741332296509643,
+        "recall@20": 0.18036072144288579,
+        "ndcg@20": 0.08045669668004798
+      },
+      "user_macro": {
+        "recall@10": 0.12596153846153846,
+        "ndcg@10": 0.06555921760207517,
+        "recall@20": 0.17596153846153847,
+        "ndcg@20": 0.07807583968623061
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 334,
+        "user_count": 48,
+        "candidate_recall": 0.37425149700598803,
+        "target_known_before_count": 334,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.19161676646706588,
+          "ndcg@10": 0.10071631185503928,
+          "recall@20": 0.26646706586826346,
+          "ndcg@20": 0.11939417212250486
+        },
+        "user_macro": {
+          "recall@10": 0.21602182539682538,
+          "ndcg@10": 0.11174746570291914,
+          "recall@20": 0.2866484788359788,
+          "ndcg@20": 0.12925732220286326
+        }
+      },
+      "new": {
+        "query_count": 165,
+        "user_count": 47,
+        "candidate_recall": 0.030303030303030304,
+        "target_known_before_count": 95,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.006060606060606061,
+          "ndcg@20": 0.0016378069965292106
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.002127659574468085,
+          "ndcg@20": 0.0005749747966538718
+        }
+      },
+      "warm": {
+        "query_count": 429,
+        "user_count": 49,
+        "candidate_recall": 0.30303030303030304,
+        "target_known_before_count": 429,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.14918414918414918,
+          "ndcg@10": 0.07841316587315413,
+          "recall@20": 0.2097902097902098,
+          "ndcg@20": 0.09358482900546375
+        },
+        "user_macro": {
+          "recall@10": 0.1511175898931001,
+          "ndcg@10": 0.08018013772323523,
+          "recall@20": 0.20873825720764497,
+          "ndcg@20": 0.09462418652372567
+        }
+      },
+      "cold": {
+        "query_count": 70,
+        "user_count": 33,
+        "candidate_recall": 0.0,
+        "target_known_before_count": 0,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 499,
+      "users": 52,
+      "targets_in_candidates": 130,
+      "targets_missing_from_candidates": 369
+    }
+  },
+  "Random206": {
+    "overall": {
+      "query_count": 499,
+      "user_count": 52,
+      "candidate_recall": 0.2605210420841683,
+      "target_known_before_count": 429,
+      "repeat_count": 334,
+      "query_micro": {
+        "recall@10": 0.11022044088176353,
+        "ndcg@10": 0.06622192656949326,
+        "recall@20": 0.1743486973947896,
+        "ndcg@20": 0.08244313390459854
+      },
+      "user_macro": {
+        "recall@10": 0.10576923076923077,
+        "ndcg@10": 0.06354757953495602,
+        "recall@20": 0.1701923076923077,
+        "ndcg@20": 0.0798932327885301
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 334,
+        "user_count": 48,
+        "candidate_recall": 0.37425149700598803,
+        "target_known_before_count": 334,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.16167664670658682,
+          "ndcg@10": 0.09803506395962022,
+          "recall@20": 0.25748502994011974,
+          "ndcg@20": 0.12226974198422362
+        },
+        "user_macro": {
+          "recall@10": 0.17268518518518516,
+          "ndcg@10": 0.09835715044331524,
+          "recall@20": 0.27139550264550266,
+          "ndcg@20": 0.12347239171972214
+        }
+      },
+      "new": {
+        "query_count": 165,
+        "user_count": 47,
+        "candidate_recall": 0.030303030303030304,
+        "target_known_before_count": 95,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.006060606060606061,
+          "ndcg@10": 0.0018244242161453406,
+          "recall@20": 0.006060606060606061,
+          "ndcg@20": 0.0018244242161453406
+        },
+        "user_macro": {
+          "recall@10": 0.002127659574468085,
+          "ndcg@10": 0.0006404893524765558,
+          "recall@20": 0.002127659574468085,
+          "ndcg@20": 0.0006404893524765558
+        }
+      },
+      "warm": {
+        "query_count": 429,
+        "user_count": 49,
+        "candidate_recall": 0.30303030303030304,
+        "target_known_before_count": 429,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.1282051282051282,
+          "ndcg@10": 0.07702736913328004,
+          "recall@20": 0.20279720279720279,
+          "ndcg@20": 0.0958953935160715
+        },
+        "user_macro": {
+          "recall@10": 0.12516196954972464,
+          "ndcg@10": 0.07515268100667441,
+          "recall@20": 0.20066407515387108,
+          "ndcg@20": 0.09427278769974982
+        }
+      },
+      "cold": {
+        "query_count": 70,
+        "user_count": 33,
+        "candidate_recall": 0.0,
+        "target_known_before_count": 0,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 499,
+      "users": 52,
+      "targets_in_candidates": 130,
+      "targets_missing_from_candidates": 369
+    }
+  },
+  "Stable206": {
+    "overall": {
+      "query_count": 499,
+      "user_count": 52,
+      "candidate_recall": 0.2605210420841683,
+      "target_known_before_count": 429,
+      "repeat_count": 334,
+      "query_micro": {
+        "recall@10": 0.11823647294589178,
+        "ndcg@10": 0.06152718429496703,
+        "recall@20": 0.17835671342685372,
+        "ndcg@20": 0.07678187849468507
+      },
+      "user_macro": {
+        "recall@10": 0.11634615384615385,
+        "ndcg@10": 0.0600039710830549,
+        "recall@20": 0.17403846153846156,
+        "ndcg@20": 0.0746426103247074
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 334,
+        "user_count": 48,
+        "candidate_recall": 0.37425149700598803,
+        "target_known_before_count": 334,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.17365269461077845,
+          "ndcg@10": 0.09102106277701966,
+          "recall@20": 0.2634730538922156,
+          "ndcg@20": 0.11381175860234692
+        },
+        "user_macro": {
+          "recall@10": 0.19026951058201058,
+          "ndcg@10": 0.09623429837829005,
+          "recall@20": 0.278885582010582,
+          "ndcg@20": 0.11860129574368518
+        }
+      },
+      "new": {
+        "query_count": 165,
+        "user_count": 47,
+        "candidate_recall": 0.030303030303030304,
+        "target_known_before_count": 95,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.006060606060606061,
+          "ndcg@10": 0.0018244242161453406,
+          "recall@20": 0.006060606060606061,
+          "ndcg@20": 0.0018244242161453406
+        },
+        "user_macro": {
+          "recall@10": 0.002127659574468085,
+          "ndcg@10": 0.0006404893524765558,
+          "recall@20": 0.002127659574468085,
+          "ndcg@20": 0.0006404893524765558
+        }
+      },
+      "warm": {
+        "query_count": 429,
+        "user_count": 49,
+        "candidate_recall": 0.30303030303030304,
+        "target_known_before_count": 429,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.13752913752913754,
+          "ndcg@10": 0.0715665849957775,
+          "recall@20": 0.20745920745920746,
+          "ndcg@20": 0.08931039013717448
+        },
+        "user_macro": {
+          "recall@10": 0.1400388726919339,
+          "ndcg@10": 0.07233049703662678,
+          "recall@20": 0.2063330093942339,
+          "ndcg@20": 0.08915244300902879
+        }
+      },
+      "cold": {
+        "query_count": 70,
+        "user_count": 33,
+        "candidate_recall": 0.0,
+        "target_known_before_count": 0,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 499,
+      "users": 52,
+      "targets_in_candidates": 130,
+      "targets_missing_from_candidates": 369
+    }
+  },
+  "Permutation206": {
+    "overall": {
+      "query_count": 499,
+      "user_count": 52,
+      "candidate_recall": 0.2605210420841683,
+      "target_known_before_count": 429,
+      "repeat_count": 334,
+      "query_micro": {
+        "recall@10": 0.11823647294589178,
+        "ndcg@10": 0.0686423462479599,
+        "recall@20": 0.19238476953907815,
+        "ndcg@20": 0.0875635666927508
+      },
+      "user_macro": {
+        "recall@10": 0.11346153846153847,
+        "ndcg@10": 0.06587025149563845,
+        "recall@20": 0.1875,
+        "ndcg@20": 0.08473306844780766
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 334,
+        "user_count": 48,
+        "candidate_recall": 0.37425149700598803,
+        "target_known_before_count": 334,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.17365269461077845,
+          "ndcg@10": 0.10160798173936007,
+          "recall@20": 0.2844311377245509,
+          "ndcg@20": 0.12987651168532013
+        },
+        "user_macro": {
+          "recall@10": 0.18390376984126985,
+          "ndcg@10": 0.10936416427078428,
+          "recall@20": 0.33217592592592593,
+          "ndcg@20": 0.1470269432912978
+        }
+      },
+      "new": {
+        "query_count": 165,
+        "user_count": 47,
+        "candidate_recall": 0.030303030303030304,
+        "target_known_before_count": 95,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.006060606060606061,
+          "ndcg@10": 0.001911908344155932,
+          "recall@20": 0.006060606060606061,
+          "ndcg@20": 0.001911908344155932
+        },
+        "user_macro": {
+          "recall@10": 0.002127659574468085,
+          "ndcg@10": 0.0006712018655015506,
+          "recall@20": 0.002127659574468085,
+          "ndcg@20": 0.0006712018655015506
+        }
+      },
+      "warm": {
+        "query_count": 429,
+        "user_count": 49,
+        "candidate_recall": 0.30303030303030304,
+        "target_known_before_count": 429,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.13752913752913754,
+          "ndcg@10": 0.07984272908562236,
+          "recall@20": 0.22377622377622378,
+          "ndcg@20": 0.10185132815776841
+        },
+        "user_macro": {
+          "recall@10": 0.13733398121153223,
+          "ndcg@10": 0.07939808120292562,
+          "recall@20": 0.2280045351473923,
+          "ndcg@20": 0.10247294067196656
+        }
+      },
+      "cold": {
+        "query_count": 70,
+        "user_count": 33,
+        "candidate_recall": 0.0,
+        "target_known_before_count": 0,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 499,
+      "users": 52,
+      "targets_in_candidates": 130,
+      "targets_missing_from_candidates": 369
+    }
+  },
+  "ForwardGroups66": {
+    "overall": {
+      "query_count": 499,
+      "user_count": 52,
+      "candidate_recall": 0.2605210420841683,
+      "target_known_before_count": 429,
+      "repeat_count": 334,
+      "query_micro": {
+        "recall@10": 0.12424849699398798,
+        "ndcg@10": 0.0678997260668155,
+        "recall@20": 0.18236472945891782,
+        "ndcg@20": 0.08247309820314146
+      },
+      "user_macro": {
+        "recall@10": 0.12211538461538461,
+        "ndcg@10": 0.0661851424769288,
+        "recall@20": 0.1778846153846154,
+        "ndcg@20": 0.08016997458467236
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 334,
+        "user_count": 48,
+        "candidate_recall": 0.37425149700598803,
+        "target_known_before_count": 334,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.18562874251497005,
+          "ndcg@10": 0.10144300391419443,
+          "recall@20": 0.27245508982035926,
+          "ndcg@20": 0.12321579641726822
+        },
+        "user_macro": {
+          "recall@10": 0.21637731481481481,
+          "ndcg@10": 0.11671032064496817,
+          "recall@20": 0.2965112433862434,
+          "ndcg@20": 0.13672030364007656
+        }
+      },
+      "new": {
+        "query_count": 165,
+        "user_count": 47,
+        "candidate_recall": 0.030303030303030304,
+        "target_known_before_count": 95,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      },
+      "warm": {
+        "query_count": 429,
+        "user_count": 49,
+        "candidate_recall": 0.30303030303030304,
+        "target_known_before_count": 429,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.1445221445221445,
+          "ndcg@10": 0.07897893544834718,
+          "recall@20": 0.21212121212121213,
+          "ndcg@20": 0.09593024709409693
+        },
+        "user_macro": {
+          "recall@10": 0.14624230644638808,
+          "ndcg@10": 0.07948163527400398,
+          "recall@20": 0.21013119533527697,
+          "ndcg@20": 0.0955182141630753
+        }
+      },
+      "cold": {
+        "query_count": 70,
+        "user_count": 33,
+        "candidate_recall": 0.0,
+        "target_known_before_count": 0,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 499,
+      "users": 52,
+      "targets_in_candidates": 130,
+      "targets_missing_from_candidates": 369
+    }
+  },
+  "Popularity": {
+    "overall": {
+      "query_count": 499,
+      "user_count": 52,
+      "candidate_recall": 0.2605210420841683,
+      "target_known_before_count": 429,
+      "repeat_count": 334,
+      "query_micro": {
+        "recall@10": 0.01002004008016032,
+        "ndcg@10": 0.007439708164761612,
+        "recall@20": 0.01002004008016032,
+        "ndcg@20": 0.007439708164761612
+      },
+      "user_macro": {
+        "recall@10": 0.009615384615384616,
+        "ndcg@10": 0.007139258411953931,
+        "recall@20": 0.009615384615384616,
+        "ndcg@20": 0.007139258411953931
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 334,
+        "user_count": 48,
+        "candidate_recall": 0.37425149700598803,
+        "target_known_before_count": 334,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.011976047904191617,
+          "ndcg@10": 0.008121001120407319,
+          "recall@20": 0.011976047904191617,
+          "ndcg@20": 0.008121001120407319
+        },
+        "user_macro": {
+          "recall@10": 0.01736111111111111,
+          "ndcg@10": 0.010654935976819676,
+          "recall@20": 0.01736111111111111,
+          "ndcg@20": 0.010654935976819676
+        }
+      },
+      "new": {
+        "query_count": 165,
+        "user_count": 47,
+        "candidate_recall": 0.030303030303030304,
+        "target_known_before_count": 95,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.006060606060606061,
+          "ndcg@10": 0.006060606060606061,
+          "recall@20": 0.006060606060606061,
+          "ndcg@20": 0.006060606060606061
+        },
+        "user_macro": {
+          "recall@10": 0.00303951367781155,
+          "ndcg@10": 0.00303951367781155,
+          "recall@20": 0.00303951367781155,
+          "ndcg@20": 0.00303951367781155
+        }
+      },
+      "warm": {
+        "query_count": 429,
+        "user_count": 49,
+        "candidate_recall": 0.30303030303030304,
+        "target_known_before_count": 429,
+        "repeat_count": 334,
+        "query_micro": {
+          "recall@10": 0.011655011655011656,
+          "ndcg@10": 0.00865364655994416,
+          "recall@20": 0.011655011655011656,
+          "ndcg@20": 0.00865364655994416
+        },
+        "user_macro": {
+          "recall@10": 0.011678004535147392,
+          "ndcg@10": 0.008904294003413247,
+          "recall@20": 0.011678004535147392,
+          "ndcg@20": 0.008904294003413247
+        }
+      },
+      "cold": {
+        "query_count": 70,
+        "user_count": 33,
+        "candidate_recall": 0.0,
+        "target_known_before_count": 0,
+        "repeat_count": 0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 499,
+      "users": 52,
+      "targets_in_candidates": 130,
+      "targets_missing_from_candidates": 369
+    }
+  }
+}

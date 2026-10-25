@@ -28,6 +28,7 @@
 | R5 | Две новые development-когорты | [P005](task_01_auto_features/report/P005_ROBUSTNESS.md), [snapshot](task_01_auto_features/report/p005_snapshot/README.md) | Ожидается |
 | R6 | Методика единственного финального test | [P006 protocol](task_01_auto_features/configs/P006_PROTOCOL.md), [pre-open manifest](task_01_auto_features/configs/p006_freeze_manifest.json) | Ожидается |
 | R7 | Итоговая оценка P006:18 результатов, pooled метрики и условный bootstrap | [P006 результат](task_01_auto_features/report/P006_FINAL_TEST.md), [snapshot](task_01_auto_features/report/p006_snapshot/README.md), [рецензия](task_01_auto_features/research/P006_RESULT_REVIEW.md) | Ожидается |
+| R8 | P007: новые selectors и оценка всех validation queries на K100/полном cohort catalog; выбранные признаки, стоимость, переходы targets и условный bootstrap | [P007 протокол](task_01_auto_features/configs/P007_PROTOCOL.md), [отчёт](task_01_auto_features/report/P007_EXPANDED_COMPARISON.md), [snapshot](task_01_auto_features/report/p007_snapshot/README.md), [runtime recheck](task_01_auto_features/research/P007_RUNTIME_RECHECK.md) | Ожидается |
 
 Для итоговой авторской проверки: [HUMAN_REVIEW.md](task_01_auto_features/report/HUMAN_REVIEW.md); общий текст — [FINAL_REPORT.md](task_01_auto_features/report/FINAL_REPORT.md). Автоматические численные проверки завершены; человеческое подтверждение остаётся открытым.
 

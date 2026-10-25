@@ -1,0 +1,41 @@
+{
+  "experiment": "P007",
+  "cohort": "p001",
+  "stage": "gate",
+  "status": "failed",
+  "final_test_evaluated": false,
+  "selection_frozen_sha256": "693559e96abbac826d74136f263c9941b4d71871212ba343092b9bb5ab4ecdc3",
+  "config_sha256": "9b1ef366ee314dd05ce22d29be48ff56f707963f3c53373560005e940ccd7640",
+  "protocol_sha256": "e6cd93b6fb6dccd554b982e86b051e247132415f343bb33bfdcb4388837c1afd",
+  "source_sha256": {
+    "expanded_vector_features.py": "1b917fcfdfb5c9517b39c990f50f080a7bad48dc8618c22b562dd7b97a8c2534",
+    "expanded_catalog.py": "4e6e16c2cd32de80ae328c7c1a9038671c720714a9fd86af6e12ebbbcb54354c",
+    "run_expanded_catalog.py": "395f2e061d0988c4544e9d58431e170b6352f4a374058c3d11b00e001dd23617",
+    "expanded_metrics.py": "286d555f8a1e81b7b96dd8409968ece696fa43b9cfb30776ff4207f07fcf4f3e"
+  },
+  "progress": {
+    "queries_completed": 41,
+    "cells_compared": 844600,
+    "catalog_rows_scored": 0
+  },
+  "inputs_sha256": {
+    "artifacts/p004_auto64/features.npy": "ff0cfaa6ba1e4999f84d8fa4e7e4da9981f9cfc98afed28c66956041d47953de",
+    "artifacts/p004_auto64/feature_inputs.jsonl": "7cbd3241c7558f84aa4daa3ce5bdd40830ed39cd71047be2cff0d8b899edabca",
+    "artifacts/p004_auto64/feature_schema.json": "e365ef4f953fa98f92e4a58b50d4ef3085632e6708a232fb6f34ca8889181e09",
+    "artifacts/p004_auto64/selection_frozen.json": "c7f43fef5c7e93b9e64a4f7ee6063b4247fb7cb8cb768378b787303003c7139d",
+    "artifacts/pilot_001/queries.jsonl": "0cf3d126a80dda71a3f9289f10efc5b1a6527495e2e9042a4f0357c26a643233",
+    "artifacts/pilot_001/data/events.parquet": "b65dd4c15e1772e42c7971230550f6559b3614ce07db153106576552391f5f36"
+  },
+  "error": "AssertionError: Exact frozen206 gate failed at query 1390: [[75, 195], [75, 197]]",
+  "elapsed_seconds": 34.114705,
+  "resources": {
+    "peak_process_rss_mb": 855.9,
+    "minimum_available_system_mb": 930.69,
+    "sampling_interval_seconds": 0.25,
+    "limits": {
+      "runner_peak_rss_mb": 1100,
+      "minimum_available_mb": 150
+    },
+    "limit_exceeded": null
+  }
+}

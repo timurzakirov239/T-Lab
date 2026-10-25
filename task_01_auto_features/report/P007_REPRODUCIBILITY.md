@@ -22,7 +22,7 @@ CSV хранит 27 558 строк: 1 531 query × 9 методов × 2 реж�
 .\.venv\Scripts\python.exe task_01_auto_features/src/verify_expanded_results.py --output artifacts/p007_expanded_search/verification_recheck.json
 ```
 
-Для повторной проверки нужен новый путь `--output`: существующие квитанции не перезаписываются. Verifier проверяет hashes, masks, неизменность controls, восстанавливает K100 ranks из prediction NPZ, проверяет Full top20 evidence, target scores, вложенность и знаменатели. Истории событий не декодирует, модели не обучает.
+Для повторной проверки нужен новый путь `--output`: существующие квитанции не перезаписываются. Verifier проверяет hashes, masks, неизменность controls, восстанавливает K100 ranks из prediction NPZ, проверяет Full top20 evidence, target scores, вложенность и знаменатели. Для Popularity независимо читает SHA-pinned frozen matrix, schema и feature inputs, извлекает `i_listen_all` и восстанавливает candidate scores/ranks; сохранённые в P001 query scores дополнительно сверяются. Истории событий не декодирует, модели не обучает. Для исторических controls явно сопоставляется их прежняя схема метрик с четырьмя обязательными P007 метриками.
 
 Ранги Full выше 20 защищены SHA, но не восстанавливаются независимо: полный вектор scores не сохранён. Все используемые top20-метрики проверяются по сохранённым top20 lists и target score/rank.
 

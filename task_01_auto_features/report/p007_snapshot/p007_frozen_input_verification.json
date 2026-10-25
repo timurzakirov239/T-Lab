@@ -1,0 +1,9 @@
+{
+  "experiment": "P007",
+  "verified_at_utc": "2026-10-25T17:44:47.868123+00:00",
+  "status": "PASS",
+  "checked_files": 72,
+  "manifest_sha256": "000f9a8bac45c15ae1a52a71a0e36b944f4ce6a1f4d9cb6127f882cc27b8a6dd",
+  "mismatches": [],
+  "method": "binary SHA256 only; no event payload decoding or P006 test replay"
+}
