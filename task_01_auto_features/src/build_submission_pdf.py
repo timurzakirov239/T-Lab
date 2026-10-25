@@ -124,7 +124,11 @@ def main():
             text = line
             if text.startswith("- "):
                 text = "• " + text[2:]
-            story.append(Paragraph(inline(text), styles["BodyRU"]))
+            paragraph = Paragraph(inline(text), styles["BodyRU"])
+            if re.match(r"\*\*\[\d+\]", text):
+                story.append(KeepTogether([paragraph]))
+            else:
+                story.append(paragraph)
         i += 1
 
     def page(canvas, doc):

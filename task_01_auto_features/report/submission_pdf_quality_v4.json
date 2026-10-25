@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "pages": 13,
+  "figures": 5,
+  "tables": 12,
+  "source_entries": 11,
+  "clickable_pdf_links": 26,
+  "pdf_sha256": "8e6b40a32cedbc8f5d12380baf27d50a3a8ded93506636b575c82d5f4650b5e0",
+  "report_sha256": "bc310ab7d1b8486a891c22c9cf3d2c747b44c54cacdd3741005afd4af617ac5e",
+  "unchanged_first_11_pages": true,
+  "visual_review": "All pages rendered; first 11 pages unchanged; conclusion and sources pages inspected after final rebuild. Individual references kept together.",
+  "new_experiments_run": false
+}
