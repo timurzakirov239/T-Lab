@@ -99,6 +99,16 @@ class FullCatalogFeatures:
             relation: np.bincount(edges[0], minlength=len(self.item_ids)).astype(np.float64)
             for relation, edges in self._mapping_edges.items()
         }
+        self._mapping_groups = {}
+        for relation, (edge_rows, _edge_entities, _unique, _inverse) in self._mapping_edges.items():
+            if len(edge_rows):
+                starts = np.r_[0, np.flatnonzero(edge_rows[1:] != edge_rows[:-1]) + 1]
+                items = edge_rows[starts]
+                ends = np.r_[starts[1:], len(edge_rows)]
+                degrees = ends - starts
+            else:
+                starts = ends = items = degrees = np.empty(0, dtype=np.int64)
+            self._mapping_groups[relation] = (starts, ends, items, degrees)
 
     def _edges(self, mapping: Mapping[int, Sequence[int]]) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         rows: list[int] = []
@@ -175,60 +185,66 @@ class FullCatalogFeatures:
         return counts
 
     def _entity_values(self, relation: str, user_id: int, timestamp: int,
-                       stats_cache: dict[tuple[int, str, int | str], float]) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+                       stats_cache: dict[tuple[int, str, int | str], float]) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[int], np.ndarray]:
         edge_rows, _edge_entities, unique_entities, inverse = self._mapping_edges[relation]
         store = self.engine._user_artists if relation == "artist" else self.engine._user_albums
-        values = np.zeros((len(unique_entities), len(self.engine.specs)), dtype=np.float64)
         relation_columns = [column for column, spec in enumerate(self.engine.specs)
                             if spec["path"] == f"c_{relation}"]
-        for column in relation_columns:
+        values = np.zeros((len(unique_entities), len(relation_columns)), dtype=np.float64)
+        for local_column, column in enumerate(relation_columns):
             if self.engine.specs[column]["op"] == "share":
-                values[:, column] = 0.5
+                values[:, local_column] = 0.5
         for entity_position, entity in enumerate(unique_entities):
             stats = store.get((user_id, int(entity)))
             if stats is None:
                 continue
-            for column in relation_columns:
+            for local_column, column in enumerate(relation_columns):
                 spec = self.engine.specs[column]
                 if spec["op"] == "knownshare":
-                    values[entity_position, column] = float(stats is not None and stats.has_activity())
+                    values[entity_position, local_column] = float(stats.has_activity())
                 elif spec["op"] == "count":
-                    values[entity_position, column] = self.engine._count(
+                    values[entity_position, local_column] = self.engine._count(
                         stats, spec["signal"], spec["window"], timestamp, stats_cache)
                 elif spec["op"] == "share":
                     numerator = self.engine._count(stats, spec["signal"], spec["window"], timestamp, stats_cache)
                     denominator = self.engine._count(stats, "events", spec["window"], timestamp, stats_cache)
-                    values[entity_position, column] = (numerator + 0.5) / (denominator + 1.0)
+                    values[entity_position, local_column] = (numerator + 0.5) / (denominator + 1.0)
                 elif spec["op"] == "trend":
                     width = int(spec["window"])
                     current = self.engine._count(stats, spec["signal"], width, timestamp, stats_cache)
                     two = self.engine._count(stats, spec["signal"], 2 * width, timestamp, stats_cache)
                     previous = max(0.0, two - current)
-                    values[entity_position, column] = (current - previous) / (previous + 1.0)
+                    values[entity_position, local_column] = (current - previous) / (previous + 1.0)
                 else:
                     raise ValueError(f"unsupported entity operator: {spec['op']}")
-        return edge_rows, unique_entities, inverse, values
+        return edge_rows, unique_entities, inverse, relation_columns, values
 
     def _build_relation_columns(self, relation: str, user_id: int, timestamp: int,
                                 stats_cache: dict[tuple[int, str, int | str], float]) -> dict[int, np.ndarray]:
-        edge_rows, _unique, inverse, entity_values = self._entity_values(
+        edge_rows, _unique, inverse, columns, entity_values = self._entity_values(
             relation, user_id, timestamp, stats_cache)
-        columns = [i for i, spec in enumerate(self.engine.specs) if spec["path"] == f"c_{relation}"]
         reduced_columns: dict[int, np.ndarray] = {}
         if not len(edge_rows):
             return {column: np.zeros(len(self.item_ids), dtype=np.float64) for column in columns}
-        mapped_values = entity_values[inverse]
-        degree = self._mapping_degree[relation]
-        for column in columns:
+        starts, ends, items, degrees = self._mapping_groups[relation]
+        for local_column, column in enumerate(columns):
             reducer = self.engine.specs[column]["reducer"]
+            edge_values = entity_values[inverse, local_column]
             if reducer == "max":
                 reduced = np.full(len(self.item_ids), -np.inf, dtype=np.float64)
-                np.maximum.at(reduced, edge_rows, mapped_values[:, column])
-                reduced[degree == 0] = 0.0
+                reduced[items] = np.maximum.reduceat(edge_values, starts)
+                reduced[reduced == -np.inf] = 0.0
             else:
                 reduced = np.zeros(len(self.item_ids), dtype=np.float64)
-                np.add.at(reduced, edge_rows, mapped_values[:, column])
-                np.divide(reduced, degree, out=reduced, where=degree > 0)
+                single = degrees == 1
+                reduced[items[single]] = edge_values[starts[single]]
+                # Python 3.12's float sum uses compensated accumulation. Match
+                # the reference reducer exactly for many-to-many mappings,
+                # where cancellation can otherwise change a float32 ULP.
+                for group_index in np.flatnonzero(degrees > 1):
+                    start, end = int(starts[group_index]), int(ends[group_index])
+                    reduced[int(items[group_index])] = sum(
+                        float(value) for value in edge_values[start:end]) / int(degrees[group_index])
             reduced_columns[column] = reduced
         return reduced_columns
 
