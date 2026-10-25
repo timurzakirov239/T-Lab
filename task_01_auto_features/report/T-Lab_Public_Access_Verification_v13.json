@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "authentication_used": false,
+  "release": "https://github.com/timurzakirov239/T-Lab/releases/tag/submission-v1.3",
+  "main_files": [
+    "README.md"
+  ],
+  "readme_matches_report": true,
+  "assets": [
+    {
+      "name": "SHA256SUMS.txt",
+      "sha256": "ea134743887761f03f4478d10d9ae9a9f583152f63df53632ab69a242188da0f",
+      "anonymous_download": "PASS"
+    },
+    {
+      "name": "T-Lab_Archive_Verification.json",
+      "sha256": "8e956dcafba4064db0dae1d7c3884ec234a4326840bfbe9c2a2f1649e02d86a0",
+      "anonymous_download": "PASS"
+    },
+    {
+      "name": "T-Lab_Report_RU.md",
+      "sha256": "bc310ab7d1b8486a891c22c9cf3d2c747b44c54cacdd3741005afd4af617ac5e",
+      "anonymous_download": "PASS"
+    },
+    {
+      "name": "T-Lab_Report_RU.pdf",
+      "sha256": "8e6b40a32cedbc8f5d12380baf27d50a3a8ded93506636b575c82d5f4650b5e0",
+      "anonymous_download": "PASS"
+    },
+    {
+      "name": "T-Lab_Source_and_Evidence.zip",
+      "sha256": "d51522198831a952fd1ee8b297aad7d1aac246be93e01ec9dd2d53d9c04adbd9",
+      "anonymous_download": "PASS"
+    }
+  ]
+}
