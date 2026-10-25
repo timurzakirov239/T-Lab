@@ -1,0 +1,89 @@
+{
+  "experiment": "P008",
+  "cohort": "p001",
+  "stage": "full",
+  "status": "complete",
+  "final_test_evaluated": false,
+  "config_sha256": "f7a6299a5674606db01ff0c1716e7b6230a860f56d70a6cbf1b6279edac528aa",
+  "protocol_sha256": "e98385b8f542eed47bd1cb1c32d971ad14353267a1574ccb46a4242835e4584e",
+  "source_sha256": {
+    "run_sampled_training.py": "74328d94bb4222829e063bc79a9933c4849bd61652fa9ec54aa1649f523a6dd7",
+    "prepare_sampled_training.py": "558e849b3f184b1974d6671efc85527fa06e729cbee76eb44c7ea0a28f3723ec",
+    "sampled_negatives.py": "6c070fb1a48095444fd5a9ba960c230ea694a2f3d3560ba3589f48f9d397e68d",
+    "auto_features.py": "1cf99007be2fc0a36096ac5263b2dc691430f9f48fe7d97fb097faa4f47961bb",
+    "pilot_features.py": "274d7e717226bcae817873e3afc8509d7f5d4078b894547f178e29b5fb0b9dc7",
+    "expanded_vector_features.py": "8e9390d21c6132a41c28ca6c0e4c2e06ea8068601c252edba8afaeb607bb2e7b",
+    "expanded_catalog.py": "7bf33e8bdd2033f98e40601845e49b5bbb73c914d7b27269b6a562aec4ccb008",
+    "expanded_metrics.py": "286d555f8a1e81b7b96dd8409968ece696fa43b9cfb30776ff4207f07fcf4f3e"
+  },
+  "progress": {
+    "queries_completed": 499,
+    "cells_compared": 3293400,
+    "catalog_rows_scored": 19098715
+  },
+  "models": [],
+  "all_fits_frozen_sha256": "5bf70ed4acd24f706a4a8fb6a0e14194006cde228810b13f8b74a8947722f4e7",
+  "inputs_sha256": {
+    "artifacts/p004_auto64/features.npy": "ff0cfaa6ba1e4999f84d8fa4e7e4da9981f9cfc98afed28c66956041d47953de",
+    "artifacts/p004_auto64/feature_inputs.jsonl": "7cbd3241c7558f84aa4daa3ce5bdd40830ed39cd71047be2cff0d8b899edabca",
+    "artifacts/p004_auto64/feature_schema.json": "e365ef4f953fa98f92e4a58b50d4ef3085632e6708a232fb6f34ca8889181e09",
+    "artifacts/p004_auto64/selection_frozen.json": "c7f43fef5c7e93b9e64a4f7ee6063b4247fb7cb8cb768378b787303003c7139d",
+    "artifacts/pilot_001/queries.jsonl": "0cf3d126a80dda71a3f9289f10efc5b1a6527495e2e9042a4f0357c26a643233",
+    "artifacts/pilot_001/data/events.parquet": "b65dd4c15e1772e42c7971230550f6559b3614ce07db153106576552391f5f36"
+  },
+  "fit_status_sha256": "737ebb0fb710f895aedc9e6da3fe6b836ff6f839ae0de5e6197948443023b8cf",
+  "exact_gate": {
+    "identical_float32_bytes": true,
+    "cells": 3293400,
+    "queries": 499,
+    "values_sha256": "693cbeaacb0439eb3af597691d21e2d244bfe6ebdffc98ce870b03c4ac2340bc"
+  },
+  "catalog_size": {
+    "min": 35580,
+    "max": 41240,
+    "mean": 38273.977955911825
+  },
+  "reference_parity_exact": true,
+  "outputs_sha256": {
+    "metrics100.json": "2c14198c628a7442ae2f76d1b406bb90bb8454dbf998c3a0e5fb803e51297005",
+    "metrics_full.json": "a1e9510d483fd0ae354baf0f317e848c82b0c72155dc09c0534cc2d086a56472",
+    "predictions/Baseline_A1.npz": "92673f1a723632351d79493a6110a8ee4a166c91715553237d6c2eb9fb7ceec2",
+    "predictions/Baseline_UIDC.npz": "4077c7e3e34759fa83edc66aedde2300ad3ffc804e160622ca20e5f493cc0e78",
+    "predictions/HybridHit_A1.npz": "bffc62af7eabeebd92c7823dee1552ebdf41cb7d84a80e77a97c65d36fa8a125",
+    "predictions/HybridHit_UIDC.npz": "a8e8ad121daf8e08d59564554efe20cebf1e8c795b44324e5251393858dc3d96",
+    "predictions/HybridWarm_A1.npz": "9405132ddeb3ed021d7250512a278ffc86c26a83d623a8896977e7bc23c1674f",
+    "predictions/HybridWarm_UIDC.npz": "c9a467b46a1b96f331b0205c585f8f08b2e615b35d221f5d7075a86b27f2d996",
+    "predictions/Popularity.npz": "22e8c9b442575053c9745f59f4964f4e75828a30756dfb5b30b7964bbf6f954e",
+    "predictions/Uniform_A1.npz": "8685a9a271665c84876e370df30dc62e666408164d2eadff06a51924cec9644b",
+    "predictions/Uniform_UIDC.npz": "68745689b7ebe32337c0a2f518dd8227990db364b730b3c010d895231ce322a6",
+    "ranks100/Baseline_A1.jsonl": "fdf674776e3323cf4e026d74c6a9ad6673bb51de93e61ca631041d3576d25180",
+    "ranks100/Baseline_UIDC.jsonl": "0f9ad39f058182b863c91cf56c4b189f441d45cf36fcdb80f41f61a2a573add5",
+    "ranks100/HybridHit_A1.jsonl": "be5dc12a8d1d969906c826491f058102ff1579cad2609cebd446421459c8c336",
+    "ranks100/HybridHit_UIDC.jsonl": "63f1826936203d7edea5701091e22a54dabd16add495ddfab3c02e6c90104fbd",
+    "ranks100/HybridWarm_A1.jsonl": "cd42c8def7e897655eb7230fef4520af0a59c76a43bcf07862aac474c31f0623",
+    "ranks100/HybridWarm_UIDC.jsonl": "8626ba9f8f8f57f27eedc8a03fec0b87aefeebed4a0f2c73702152c3395e9deb",
+    "ranks100/Popularity.jsonl": "dbb726de7bb1d6703e0d29d831995ee08473dc71875f197bba3403e70ba5b7b6",
+    "ranks100/Uniform_A1.jsonl": "00f3e412f6a0eafeffa220098dacaba6af8ca12bc90be975d2b7627f022b4ee3",
+    "ranks100/Uniform_UIDC.jsonl": "8f7870a6d1e15907438ae7278fed657efe4a7c616dcc39370b3a42ba45c17b2e",
+    "ranksfull/Baseline_A1.jsonl": "fb23a9ca4487cc77b13f7af1a3c7434facd94ec6bf488f0990b855ccd8a63453",
+    "ranksfull/Baseline_UIDC.jsonl": "22bbd99204db46cce426c237536b41788a414e201d53134c70aaa7e228ca6598",
+    "ranksfull/HybridHit_A1.jsonl": "694a79f05ee3b91f70e48e21f7674eb23d816f1108c5d3ac6153ead9412217e5",
+    "ranksfull/HybridHit_UIDC.jsonl": "30d78570174406306e26b0de024848d4f3ae9d6d120815368957c9e0cbe99dc3",
+    "ranksfull/HybridWarm_A1.jsonl": "59404fc6e7531d1588fe055727d2798d80958f7d9e6d9b48c16e0d25d566a919",
+    "ranksfull/HybridWarm_UIDC.jsonl": "b7b847e4099a7f1226b0604dde740dad1a9fe177cda6accb06bcbc5fb95df52a",
+    "ranksfull/Popularity.jsonl": "f8ea512456d30b3493fe53f3d2032377726f68aa8da31e7e4ec4213e92e0474a",
+    "ranksfull/Uniform_A1.jsonl": "b8c298960bcb53accc5595a10696d6fd95d6cee2042ef148333f97350ca45702",
+    "ranksfull/Uniform_UIDC.jsonl": "de4981a46d3801308b41d13e399d4cc77c3c25b5ecd37e1d2e5b26d77e92b6cd"
+  },
+  "elapsed_seconds": 282.244813,
+  "resources": {
+    "peak_process_rss_mb": 675.45,
+    "minimum_available_system_mb": 1958.32,
+    "sampling_interval_seconds": 0.25,
+    "limits": {
+      "runner_peak_rss_mb": 1100,
+      "minimum_available_mb": 150
+    },
+    "limit_exceeded": null
+  }
+}

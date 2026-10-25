@@ -345,8 +345,8 @@ def generate_report(analysis: Mapping[str, Any], statuses: Mapping[str, Mapping[
         "объединённые метрики представлены по 158 пользователям с запросами. P006 test не открывался. Никакой результат этой серии "
         "не является независимым подтверждением или популяционным выводом.", "",
         "## Условия и методы", "",
-        "Все новые arms используют неизменные UIDC66 и cohort-specific P007 A1 masks. Базовые P007 models переиспользованы; их A1 masks "
-        "были выбраны после P007 и остаются exploratory. Новый feature search и hyperparameter tuning не выполнялись. "
+        "Все новые arms используют неизменные UIDC66 и cohort-specific P007 A1 masks. Базовые P007 models переиспользованы. A1 masks "
+        "сами заморожены ещё в P004/P005; после P007 A1 выбран дополнительным benchmark, поэтому это сравнение exploratory. Новый feature search и hyperparameter tuning не выполнялись. "
         "Primary — Full user-macro NDCG@20 для HybridHit_UIDC против Baseline_UIDC.", "",
         "Baseline — исходные K100 hit-query training blocks. UniformHit использует те же hit queries с 99 равномерными cohort-catalog "
         "negatives. HybridHit заменяет 49 из них teacher-hard negatives, сохраняя общие 50 uniform draws. HybridWarm добавляет train queries, "
@@ -373,7 +373,7 @@ def generate_report(analysis: Mapping[str, Any], statuses: Mapping[str, Mapping[
         "[analysis.json](p008_snapshot/analysis.json); там же сохранены cohort-specific metrics и paired estimates. CI описательные, без "
         "поправки за несколько сравнений. Нулевой интервал не доказывает эквивалентность.", "",
         "## Eligibility, catalog coverage и переходы", "",
-        "| Cohort | Train queries | Hit in original K100 | Warm in cohort C(t) | Cold to cohort C(t) | Fit counts (Uniform/HybridHit/HybridWarm) |", "| --- | ---: | ---: | ---: | ---: | --- |",
+        "| Cohort | Train queries | Hit in original K100 | Warm in cohort C(t) | Cold to cohort C(t) | Training queries (Uniform/HybridHit/HybridWarm) |", "| --- | ---: | ---: | ---: | ---: | --- |",
     ]
     for cohort in COHORTS:
         prep = statuses[cohort]["prepare"]
@@ -394,7 +394,7 @@ def generate_report(analysis: Mapping[str, Any], statuses: Mapping[str, Mapping[
         lines.append(f"| {mode} | {present} / {overall['query_count']} ({overall['candidate_recall']:.1%}) | "
                      f"{new_present} / {new['query_count']} |")
     lines += [
-        "", "Для каждой модели Full−K100 target transitions сохранены в paired analysis; топ-20 метрики считают один logged listen target, "
+        "", "Для каждой модели парные разности Full−K100 сохранены в paired analysis; ранги отдельных целей находятся в ranks.csv. Топ-20 метрики считают один logged listen target, "
         "а не полезность всех unmarked кандидатов. Population/catalog coverage зависит только от каталога и одинаково для rankers внутри режима. "
         "Full оценивает те же замороженные модели на cohort-local C(t); это distribution shift по сравнению с K100 training.", "",
         "## Cohort-specific Full NDCG@20", "",
@@ -403,7 +403,34 @@ def generate_report(analysis: Mapping[str, Any], statuses: Mapping[str, Mapping[
     for label in LABELS:
         values = [analysis["cohort_metrics"][cohort]["Full"][label]["overall"]["user_macro"]["ndcg@20"] for cohort in COHORTS]
         lines.append(f"| {label} | " + " | ".join(_fmt(value) for value in values) + " |")
-    lines += [
+    lines += ["", "## Разбор sampling и расширения train", "",
+        "| Full contrast | Δ user-macro NDCG@20 | Descriptive 95% CI |",
+        "| --- | ---: | --- |"]
+    for family in ("HybridHit_minus_Uniform", "HybridWarm_minus_HybridHit"):
+        for mask in MASKS:
+            left = f"Uniform_{mask}" if family == "HybridHit_minus_Uniform" else f"HybridHit_{mask}"
+            right = f"HybridHit_{mask}" if family == "HybridHit_minus_Uniform" else f"HybridWarm_{mask}"
+            delta = analysis["paired_contrasts"][f"Full:{right}-minus-{left}"]["pooled"]["bootstrap"]["ndcg20"]
+            lines.append(f"| {right} − {left} | {delta['mean']:+.6f} | [{delta['ci_lower']:+.6f}; {delta['ci_upper']:+.6f}] |")
+    lines += ["",
+        "Uniform уступил исходному baseline при обеих masks. HybridHit приблизился к baseline, но основной прирост не подтверждён: "
+        "primary point estimate отрицателен, CI включает ноль. Более высокие point estimates HybridHit относительно Uniform не означают "
+        "превосходства над baseline; для UIDC интервал этого вторичного сравнения тоже включает ноль.", "",
+        "HybridWarm увеличил train с 1015 до 3644 запросов, сохранив sampling на общих запросах, но резко ухудшил итоговое ранжирование "
+        "при обеих masks и во всех трёх когортах. Это наблюдаемый эффект конкретного расширения и фиксированного training recipe; "
+        "он не доказывает вред дополнительных данных вообще. Состав запросов и их доли одновременно изменились. Причины — изменение "
+        "сигналов релевантности, sampling bias, ложные negatives или настройки обучения — требуют отдельных проверок, а не объявляются установленными.", "",
+        "| Full arm | Repeat NDCG@20 | Repeat Recall@20 | New-to-user NDCG@20 | New-to-user Recall@20 |",
+        "| --- | ---: | ---: | ---: | ---: |"]
+    for label in LABELS:
+        strata = metrics["Full"][label]["strata"]
+        repeat, new = strata["repeat"]["user_macro"], strata["new"]["user_macro"]
+        lines.append(f"| {label} | {_fmt(repeat['ndcg@20'])} | {_fmt(repeat['recall@20'])} | {_fmt(new['ndcg@20'])} | {_fmt(new['recall@20'])} |")
+    lines += ["",
+        "Repeat: 978 запросов/146 пользователей; new-to-user: 553/147, из них 363 цели доступны в Full. "
+        "Каждый столбец strata усреднён только по представленным в этой группе пользователям; их нельзя складывать для получения overall. "
+        "Падение HybridWarm особенно заметно на повторах. Отдельные улучшения new-to-user не компенсируют overall падение. "
+        "Coverage внутри каждого режима остаётся одинаковым для всех моделей: изменение обучения не меняло каталог.",
         "", "## Masks, fits и стоимость", "",
         "| Cohort | UIDC columns | P007 A1 columns | New fits | Prepare/mining s | Fit s | Gate s | Full s | Peak RSS max MiB |", "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
@@ -424,9 +451,10 @@ def generate_report(analysis: Mapping[str, Any], statuses: Mapping[str, Mapping[
         "чистый benchmark teacher inference. Все cohort statuses должны оставаться в пределах 1100 MiB RSS и 150 MiB reserve.", "",
         "Exact validation gate проверяет UIDC66 features на всех исходных K100 rows; Full scoring проверяет их в chunks2048 и требует parity "
         "с P007 для Baseline_UIDC, Baseline_A1 и Popularity. Независимая проверка и portable snapshot status — `verified`/`PASS`; teacher-pool "
-        "scores повторно не рассчитаны независимым teacher inference, что отражено в protocol.", "",
+        "scores повторно не рассчитаны независимым teacher inference, что отражено в protocol. Полные score vectors каталога не сохранялись: "
+        "exact ranks за пределами top20 защищены hashes и проверками границ/вложенности, но независимо из всех scores не восстановлены.", "",
         "## Ограничения и вывод", "",
-        "Все queries — ранее использованная development validation; P007 A1 masks тоже выбраны после просмотра этой серии. Поэтому различия "
+        "Все queries — ранее использованная development validation; A1 выбран дополнительным benchmark после P007, при неизменных ранних masks. Поэтому различия "
         "и intervals exploratory, не являются независимым test. Training имеет shortlist-derived baseline и условные positives; sampled unmarked "
         "items не доказанные negatives. Teacher in-sample, mapping time availability остаётся предположением, а cohort catalog не равен каталогу "
         "всего сервиса. P006 не открывался, работа 2 не начиналась.", "",
@@ -435,6 +463,7 @@ def generate_report(analysis: Mapping[str, Any], statuses: Mapping[str, Mapping[
         "## Материалы", "",
         "- [Протокол](../configs/P008_PROTOCOL.md), [pre-fit review](../research/P008_PROTOCOL_REVIEW.md).",
         "- [Компактный snapshot](p008_snapshot/README.md), [reproducibility](P008_REPRODUCIBILITY.md), [human review checklist](P008_HUMAN_REVIEW.md).",
+        "- [Рецензия результатов](../research/P008_RESULT_REVIEW.md), [изолированная проверка](p008_isolated_verification.json), [сохранность 72 файлов P006](p008_frozen_input_verification.json).",
         "- Portable rank analysis содержит pooled и cohort metrics, а также все paired comparisons. Полные rank score vectors и sampled training payload не включены.",
     ]
     (REPORT / "P008_SAMPLED_TRAINING.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
