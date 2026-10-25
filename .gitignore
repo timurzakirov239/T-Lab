@@ -38,3 +38,10 @@ __pycache__/
 !task_01_auto_features/report/p006_snapshot/p001/p001.log
 !task_01_auto_features/report/p006_snapshot/p005_20261026/p005_20261026.log
 !task_01_auto_features/report/p006_snapshot/p005_20261027/p005_20261027.log
+
+# Local planning and editor state are kept outside the publication branch.
+**/.obsidian/
+/notes/
+/AGENTS.md
+/СТАРТ.md
+/task_02_rl_recommendations/
