@@ -14,6 +14,11 @@ import pyarrow as pa
 import pyarrow.compute as pc
 import pyarrow.parquet as pq
 
+if __package__:
+    from .pilot_storage import ensure_run_writable
+else:
+    from pilot_storage import ensure_run_writable
+
 TASK_ROOT = Path(__file__).resolve().parents[1]
 DATA_ROOT = TASK_ROOT / "data" / "raw" / "yambda"
 EVENT_SOURCE = DATA_ROOT / "flat" / "50m" / "multi_event.parquet"
@@ -75,6 +80,8 @@ def _mapping(source: Path, output: Path, item_col: str, entity_col: str,
 
 def _prepare(output: Path, users: int, seed: int, event_source: Path, artist_source: Path,
              album_source: Path, source_hashes: dict[str, str], batch_size: int = BATCH_SIZE) -> dict:
+    ensure_run_writable(output.parent)
+    ensure_run_writable(output)
     started = time.perf_counter()
     output.mkdir(parents=True, exist_ok=True)
     for stale in ("events.parquet", "artist_mapping.parquet", "album_mapping.parquet", "metadata.json"):

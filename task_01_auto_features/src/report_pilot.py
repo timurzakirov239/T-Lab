@@ -18,9 +18,9 @@ def main() -> None:
     artifacts = ROOT / "artifacts" / "pilot_001"
     out = ROOT / "report"
     out.mkdir(exist_ok=True)
-    metrics_path = artifacts / "metrics.json"
+    metrics_path = out / "pilot_001_snapshot" / "metrics.json"
     if not metrics_path.exists():
-        metrics_path = out / "pilot_001_snapshot" / "metrics.json"
+        metrics_path = artifacts / "metrics.json"
     raw = metrics_path.read_bytes()
     run = json.loads(raw)
     if run["status"] != "complete" or run["final_test_evaluated"]:
@@ -42,7 +42,8 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(rows)
 
-    plt.rcParams.update({"font.size": 10, "font.family": "DejaVu Sans"})
+    plt.rcParams.update({"font.size": 10, "font.family": "DejaVu Sans",
+                         "svg.hashsalt": "T-Lab-P001"})
     fig, axes = plt.subplots(1, 2, figsize=(12, 6), sharey=True, layout="constrained")
     labels = [r["model"] for r in rows]
     y = np.arange(len(rows))
@@ -64,7 +65,10 @@ def main() -> None:
     fig.suptitle("P001 · Yambda · validation: 499 запросов, 52 пользователя\n"
                  "64 пользователя в когорте · один seed · пропуски кандидатов дают 0", fontsize=12)
     fig.savefig(out / "pilot_001_comparison.png", dpi=180)
-    fig.savefig(out / "pilot_001_comparison.svg")
+    fig.savefig(out / "pilot_001_comparison.svg", metadata={"Date": None})
+    svg_path = out / "pilot_001_comparison.svg"
+    svg_path.write_text("\n".join(line.rstrip() for line in svg_path.read_text(encoding="utf-8").splitlines()) + "\n",
+                        encoding="utf-8", newline="\n")
     plt.close(fig)
 
     table = "\n".join(
@@ -245,8 +249,12 @@ py -3.12 -m venv .venv
 ```
 
 Последняя команда пересоздаёт только отчёт/CSV/график из готовых результатов,
-без обучения и чтения тестовых событий. Повторное обучение выполняйте в копии
-папки проекта, чтобы сохранить артефакты этого запуска.
+без обучения и чтения тестовых событий; после Git clone доступны замороженные
+метрики, поэтому отчёт можно пересоздать и без локальных артефактов.
+Для точного воспроизведения исходного кода используйте тег
+`p001-pilot-2026-10-25` в чистом клоне с отдельно скачанными датасетами.
+Текущая версия защищает завершённые результаты от перезаписи как при подготовке,
+так и при обучении; новые опыты получают новый run ID, конфигурацию и каталог.
 
 - [Протокол до обучения](../configs/PILOT_PROTOCOL.md) и [конфигурация](../configs/pilot_001.json).
 - [Замороженные метрики](pilot_001_snapshot/metrics.json), [CSV](pilot_001_metrics.csv), [SVG](pilot_001_comparison.svg).

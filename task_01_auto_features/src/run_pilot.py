@@ -20,9 +20,11 @@ import pyarrow.parquet as pq
 if __package__:
     from .pilot_evaluation import evaluate_ranking
     from .pilot_features import FeatureEngine
+    from .pilot_storage import ensure_run_writable
 else:
     from pilot_evaluation import evaluate_ranking
     from pilot_features import FeatureEngine
+    from pilot_storage import ensure_run_writable
 
 TASK = Path(__file__).resolve().parents[1]
 
@@ -315,6 +317,7 @@ def main():
     if config.get("test_evaluation"):
         raise ValueError("Final test evaluation is forbidden in this development runner")
     out = args.output.resolve()
+    ensure_run_writable(out)
     for directory in (out, out / "models", out / "results", out / "predictions"):
         directory.mkdir(parents=True, exist_ok=True)
     monitor = ResourceMonitor(config["resource_limits"])
