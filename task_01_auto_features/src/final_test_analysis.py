@@ -17,6 +17,8 @@ def user_bootstrap(deltas,resamples=2000,seed=20261101,confidence=.95):
     values=np.asarray(deltas,dtype=np.float64)
     if values.ndim!=1 or not len(values) or not np.isfinite(values).all():
         raise ValueError('Bootstrap requires finite per-user deltas')
+    values=values.copy()
+    values[np.abs(values)<=1e-12]=0.0
     rng=np.random.default_rng(seed)
     draws=values[rng.integers(0,len(values),size=(resamples,len(values)))].mean(axis=1)
     alpha=(1-confidence)/2

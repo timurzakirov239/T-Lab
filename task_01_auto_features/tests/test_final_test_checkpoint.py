@@ -6,6 +6,7 @@ import numpy as np
 
 from task_01_auto_features.src.verify_auto_checkpoint import recompute
 from task_01_auto_features.src.verify_final_test import (
+    _nested_close,
     _validate_output_ledger,
     sha256,
     training_counts,
@@ -76,13 +77,22 @@ class FinalTestCheckpointTests(unittest.TestCase):
     def test_child_hash_ledger_detects_modified_output_bytes(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            artifact = root / "predictions.npz"
+            artifact = root / "predictions" / "scores.npz"
+            artifact.parent.mkdir()
             artifact.write_bytes(b"first")
-            status = {"output_sha256": {"predictions.npz": sha256(artifact)}}
-            self.assertEqual(_validate_output_ledger(root, status)["predictions.npz"], sha256(artifact))
+            # P006's Windows runner serializes relative Path values with backslashes.
+            status = {"output_sha256": {"predictions\\scores.npz": sha256(artifact)}}
+            self.assertEqual(_validate_output_ledger(root, status)["predictions\\scores.npz"], sha256(artifact))
             artifact.write_bytes(b"tampered")
             with self.assertRaisesRegex(AssertionError, "SHA-256 mismatch"):
                 _validate_output_ledger(root, status)
+
+    def test_bootstrap_json_compare_tolerates_only_float_roundoff(self):
+        expected = {"p001": {"ndcg20": {"mean": 0.01234567890123456, "users": 64}}}
+        actual = {"p001": {"ndcg20": {"mean": 0.01234567890123457, "users": 64}}}
+        _nested_close(expected, actual, tolerance=1e-12)
+        with self.assertRaisesRegex(AssertionError, "beyond tolerance"):
+            _nested_close(expected, {"p001": {"ndcg20": {"mean": 0.01235, "users": 64}}}, tolerance=1e-12)
 
 
 if __name__ == "__main__":

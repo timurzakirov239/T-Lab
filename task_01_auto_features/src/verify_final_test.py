@@ -213,7 +213,10 @@ def _validate_output_ledger(child: Path, status: dict[str, Any]) -> dict[str, st
     actual_files = {str(path.relative_to(child)).replace("\\", "/")
                     for path in child.rglob("*") if path.is_file()
                     and path.name not in {"run_status.json", "metrics.json"}}
-    if actual_files != set(ledger):
+    ledger_names = {str(relative).replace("\\", "/") for relative in ledger}
+    if len(ledger_names) != len(ledger):
+        raise AssertionError(f"child output hash ledger has duplicate normalized paths: {child}")
+    if actual_files != ledger_names:
         raise AssertionError(f"child output files differ from hash ledger: {child}")
     for relative, expected in ledger.items():
         path = child / Path(relative)
@@ -259,14 +262,43 @@ def _per_user_contributions(queries: list[dict[str, Any]], scores: list[np.ndarr
             for uid, values in by_user.items()}
 
 
-def _paired_user_bootstrap(cohorts: list[tuple[str, dict[int, dict[str, float]], dict[int, dict[str, float]]]],
+def _per_user_paired_deltas(queries: list[dict[str, Any]], auto_scores: list[np.ndarray],
+                            manual_scores: list[np.ndarray], k: int = 20,
+                            zero_tolerance: float = TOLERANCE) -> dict[int, dict[str, float]]:
+    """Average per-query paired metric deltas, matching the published analysis order."""
+    if not (len(queries) == len(auto_scores) == len(manual_scores)):
+        raise ValueError("query and paired prediction lengths must match")
+    values: dict[int, dict[str, list[float]]] = defaultdict(lambda: {"ndcg20": [], "recall20": []})
+    for query, auto_raw, manual_raw in zip(queries, auto_scores, manual_scores):
+        def contribution(raw: np.ndarray) -> dict[str, float]:
+            pairs = sorted(zip(np.asarray(raw, dtype=np.float64).tolist(), map(int, query["candidate_items"])),
+                           key=lambda pair: (-pair[0], pair[1]))
+            rank = next((i for i, (_score, item) in enumerate(pairs)
+                         if item == int(query["target_item"])), None)
+            hit = rank is not None and rank < k
+            return {"ndcg20": 1.0 / math.log2(rank + 2) if hit else 0.0,
+                    "recall20": float(hit)}
+        auto, manual = contribution(auto_raw), contribution(manual_raw)
+        uid = int(query["user_id"])
+        for metric in ("ndcg20", "recall20"):
+            values[uid][metric].append(auto[metric] - manual[metric])
+    deltas = {}
+    for uid, metrics in values.items():
+        deltas[uid] = {}
+        for metric, rows in metrics.items():
+            mean_delta = float(np.mean(np.asarray(rows, dtype=np.float64)))
+            deltas[uid][metric] = 0.0 if abs(mean_delta) <= zero_tolerance else mean_delta
+    return deltas
+
+
+def _paired_user_bootstrap(cohorts: list[tuple[str, dict[int, dict[str, float]]]],
                            resamples: int, seed: int, confidence: float) -> dict[str, Any]:
     """Reproduce the specified paired whole-user percentile bootstrap independently."""
     contexts: dict[str, list[dict[str, Any]]] = {}
-    for name, auto, manual in cohorts:
+    for name, delta_by_user in cohorts:
         rows = []
-        for user in sorted(set(auto) & set(manual)):
-            rows.append({"user_id": user, **{f"{metric}_delta": auto[user][metric] - manual[user][metric]
+        for user in sorted(delta_by_user):
+            rows.append({"user_id": user, **{f"{metric}_delta": delta_by_user[user][metric]
                                              for metric in ("ndcg20", "recall20")}})
         if rows:
             contexts[name] = rows
@@ -295,6 +327,32 @@ def _paired_user_bootstrap(cohorts: list[tuple[str, dict[int, dict[str, float]],
                 "positive_users": int(np.sum(deltas > 0)), "negative_users": int(np.sum(deltas < 0)),
                 "equal_users": int(np.sum(deltas == 0))}
     return output
+
+
+def _nested_close(expected: Any, actual: Any, tolerance: float = TOLERANCE, path: str = "root") -> None:
+    """Compare JSON structures exactly except for float roundoff within tolerance."""
+    if isinstance(expected, dict) and isinstance(actual, dict):
+        if set(expected) != set(actual):
+            raise AssertionError(f"{path} keys differ")
+        for key in expected:
+            _nested_close(expected[key], actual[key], tolerance, f"{path}.{key}")
+        return
+    if isinstance(expected, list) and isinstance(actual, list):
+        if len(expected) != len(actual):
+            raise AssertionError(f"{path} list lengths differ")
+        for index, (left, right) in enumerate(zip(expected, actual)):
+            _nested_close(left, right, tolerance, f"{path}[{index}]")
+        return
+    if isinstance(expected, bool) or isinstance(actual, bool):
+        if expected != actual:
+            raise AssertionError(f"{path} differs: {expected!r} != {actual!r}")
+        return
+    if isinstance(expected, (int, float)) and isinstance(actual, (int, float)):
+        if not math.isclose(float(expected), float(actual), rel_tol=0.0, abs_tol=tolerance):
+            raise AssertionError(f"{path} differs beyond tolerance: {expected!r} != {actual!r}")
+        return
+    if expected != actual:
+        raise AssertionError(f"{path} differs: {expected!r} != {actual!r}")
 
 
 def verify_parent(run: str | Path, output: str | Path) -> dict[str, Any]:
@@ -363,7 +421,7 @@ def verify_parent(run: str | Path, output: str | Path) -> dict[str, Any]:
     source_ledger: dict[str, str] | None = None
     pooled_metrics: dict[str, list[dict[str, Any]]] = defaultdict(list)
     pooled_scores: dict[str, list[np.ndarray]] = defaultdict(list)
-    bootstrap_inputs: list[tuple[str, dict[int, dict[str, float]], dict[int, dict[str, float]]]] = []
+    bootstrap_inputs: list[tuple[str, dict[int, dict[str, float]]]] = []
     any_test_evaluated = False
     any_failure = False
     for config_cohort, parent_row in zip(cohorts, summary_rows):
@@ -519,9 +577,8 @@ def verify_parent(run: str | Path, output: str | Path) -> dict[str, Any]:
         if status.get("status") == "complete" and len(queries) == 0:
             raise AssertionError(f"{cohort_id} complete child has no test queries")
         if status.get("status") == "complete" and "Auto_A2" in per_label_scores and "M_UIDC" in per_label_scores:
-            bootstrap_inputs.append((cohort_id,
-                                     _per_user_contributions(queries, per_label_scores["Auto_A2"]),
-                                     _per_user_contributions(queries, per_label_scores["M_UIDC"])))
+            bootstrap_inputs.append((cohort_id, _per_user_paired_deltas(
+                queries, per_label_scores["Auto_A2"], per_label_scores["M_UIDC"])))
         child_reports.append({"id": cohort_id, "status": status["status"],
                               "final_test_evaluated": bool(status.get("final_test_evaluated")),
                               "query_protocol": query_check, "verified_output_sha256": output_hashes,
@@ -550,8 +607,8 @@ def verify_parent(run: str | Path, output: str | Path) -> dict[str, Any]:
             errors = _compare_metrics(analysis_pooled[label], actual, TOLERANCE)
             if errors:
                 raise AssertionError(f"pooled {label} metrics differ from independent recomputation: {'; '.join(errors[:8])}")
-        if analysis.get("primary_paired_user_bootstrap") != bootstrap:
-            raise AssertionError("saved paired-user bootstrap differs from independent recomputation")
+        _nested_close(analysis.get("primary_paired_user_bootstrap"), bootstrap,
+                      TOLERANCE, "analysis.primary_paired_user_bootstrap")
         analysis_crosscheck = {"status": "match", "pooled_models": sorted(pooled_ranking),
                                "bootstrap_contexts": sorted(bootstrap)}
     elif summary.get("status") == "complete":
