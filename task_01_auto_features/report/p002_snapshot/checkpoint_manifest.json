@@ -1,0 +1,44 @@
+{
+  "experiment": "P002",
+  "run_id": "retrieval_002",
+  "frozen_date": "2026-10-25",
+  "protocol_commit": "dc02423",
+  "code_commit": "dadc4eda6f93b7e7a62c8cf8c7ef2797ea074976",
+  "git_tag": "p002-retrieval-2026-10-25",
+  "tracked_evidence": {
+    "config.json": {
+      "sha256": "7978c0b0bca4032331dedc3cdfa8dc82c017103d43825e5ff6577b503b25719f",
+      "bytes": 1129
+    },
+    "metrics.json": {
+      "sha256": "99b4a433f2ade6ee7a28df2be370e8f3fe3a5e7c853bd2d79e5487de5a5b6332",
+      "bytes": 59480
+    },
+    "P002_PROTOCOL.md": {
+      "sha256": "7645b023a19ba92a833aad070e740173fb7f9f5422725141c43da5b5ebbcf6b5",
+      "bytes": 11104
+    },
+    "P002_RECHECK.json": {
+      "sha256": "2ba0b64e2c703ba0ef657b070bb8b7416e8594a19c432d936ec6a624cfb009a3",
+      "bytes": 13777
+    },
+    "P002_RESULT_REVIEW.md": {
+      "sha256": "f3bcebbec969d1070079de7cd9899899c457bd57ae698e8514b00c48603f0c09",
+      "bytes": 8095
+    },
+    "README.md": {
+      "sha256": "fedf6d0d7076042b8b46a5c3452d7ef163c113b90793056e321c5f94c38defa3",
+      "bytes": 2188
+    },
+    "run_status.json": {
+      "sha256": "99b4a433f2ade6ee7a28df2be370e8f3fe3a5e7c853bd2d79e5487de5a5b6332",
+      "bytes": 59480
+    },
+    "validation_hits.csv": {
+      "sha256": "0fa19520ccab458a3be272af642e1b427fe2f77ed9bd32263eb085f0b3798748",
+      "bytes": 15778
+    }
+  },
+  "local_output_evidence": "Raw JSONL files remain under artifacts/retrieval_002; their SHA256 and sizes are in metrics.json. Compact validation_hits.csv derives from evaluation_rows.jsonl.",
+  "human_verification": false
+}
