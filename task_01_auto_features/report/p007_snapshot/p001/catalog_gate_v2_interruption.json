@@ -1,8 +1,0 @@
-{
-  "status": "interrupted_before_completion",
-  "reason": "Stopped by the orchestrator after 62 of 499 gate queries to address slow many-to-many summation; no full-catalog scoring had started.",
-  "exit_code": 1,
-  "final_test_evaluated": false,
-  "model_or_mask_changes": false,
-  "next_attempt": "catalog_gate_v3"
-}
