@@ -101,6 +101,7 @@ def create_snapshot():
     SNAPSHOT.mkdir()
     for source in [TASK/'configs/P007_PROTOCOL.md',TASK/'configs/p007_expanded.json',
                    TASK/'research/P007_CODE_REVIEW.md',TASK/'research/P007_K100_RESULT_REVIEW.md',
+                   TASK/'research/P007_RUNTIME_RECHECK.md',REPORT/'p007_frozen_input_verification.json',
                    ROOT/'verification_independent.json']:
         shutil.copyfile(source,SNAPSHOT/source.name)
     rows=[];cohort_status={}
@@ -290,6 +291,15 @@ def generate(analysis,statuses):
         best=max(LABELS,key=lambda x:metrics[mode][x]['overall']['user_macro']['ndcg@20'])
         lines.append(f'Наблюдаемый максимум {mode}: **{best}**, NDCG20={metrics[mode][best]["overall"]["user_macro"]["ndcg@20"]:.6f}. '
                      'Это описательный максимум среди проверенных вариантов, не независимо подтверждённый победитель.')
+    lines+=['','| Метод | K100 ΔNDCG20 к M_UIDC [95% CI] | Full ΔNDCG20 к M_UIDC [95% CI] |',
+            '| --- | ---: | ---: |']
+    for label in LABELS:
+        if label in ('Popularity','M_UIDC'):continue
+        values=[]
+        for mode in ('K100','Full'):
+            b=analysis['paired_vs_manual'][mode][label]['bootstrap']['ndcg20']
+            values.append(f'{b["mean"]:+.6f} [{b["ci_lower"]:+.6f}; {b["ci_upper"]:+.6f}]')
+        lines.append('| '+label+' | '+' | '.join(values)+' |')
     lines+=['','Парные user-bootstrap интервалы против Manual UIDC (2000 resamples,seed20261102) '
             'даны в `analysis.json`. Они условны на этих данных и не корректируют множественный поиск; '
             'все development queries уже использовались ранее. Интервал, включающий0, не доказывает эквивалентность.','',
@@ -301,11 +311,12 @@ def generate(analysis,statuses):
             'новые источники кандидатов, действительно несколько временных folds, либо новый независимый holdout. '
             'Эти эксперименты ещё не выполнены. Работа2 не начата.','',
             '## Материалы','',
-            '- [Протокол](../configs/P007_PROTOCOL.md), [рецензия кода](../research/P007_CODE_REVIEW.md).',
+            '- [Протокол](../configs/P007_PROTOCOL.md), [историческая рецензия кода](../research/P007_CODE_REVIEW.md), [финальная runtime-рецензия](../research/P007_RUNTIME_RECHECK.md).',
         '- [Компактные доказательства](p007_snapshot/README.md), [независимая проверка](p007_snapshot/verification_independent.json).',
         '- Ранги за пределами20 записаны evaluator и защищены SHA; независимо восстановлены top20-метрики по score evidence. Полные векторы scores Full не сохранялись.',
+            '- [Команды проверки и воспроизведения](P007_REPRODUCIBILITY.md), [сохранность72 frozen inputs P006](p007_frozen_input_verification.json).',
             '- [Предыдущий итоговый отчёт P001–P006](FINAL_REPORT.md) сохранён как первая завершённая серия.',
-            '- ИИ и Luna субагенты использованы для реализации/проверок; человеческая проверка источников по [чек-листу](HUMAN_REVIEW.md) остаётся ожидаемой.']
+            '- ИИ и Luna субагенты использованы для реализации/проверок; человеческая проверка источников по [чек-листу P007](P007_HUMAN_REVIEW.md) и [первой серии](HUMAN_REVIEW.md) остаётся ожидаемой.']
     lines=[re.sub(r'(?<=[А-Яа-яЁё])(?=\d)|(?<=\d)(?=[А-Яа-яЁё])', ' ', line) for line in lines]
     (REPORT/'P007_EXPANDED_COMPARISON.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
     fig,axes=plt.subplots(1,2,figsize=(12,5),layout='constrained')
