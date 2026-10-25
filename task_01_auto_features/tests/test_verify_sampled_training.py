@@ -51,6 +51,7 @@ def _make_full_fixture(root: Path) -> tuple[Path, Path]:
     (task / "configs").mkdir(parents=True)
     (task / "src").mkdir()
     config = {"p007_root": "artifacts/p007_expanded_search", "seed": 20261025,
+              "feature_count": 66, "max_candidates": 100,
               "sampling": {"seed": 20261103, "uniform_negatives": 99, "hybrid_uniform": 50,
                            "hybrid_hard": 49, "hard_pool_uniform": 256},
               "methods": ["Baseline_UIDC", "Baseline_A1", "Uniform_UIDC", "Uniform_A1",

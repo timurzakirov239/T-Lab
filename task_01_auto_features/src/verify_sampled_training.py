@@ -212,6 +212,13 @@ def verify_sampled_training(root: Path, task_root: Path, config_path: Path | Non
     methods = set(config.get("methods", []))
     if methods != set(LABELS):
         raise AssertionError("P008 configured labels differ from the fixed nine-label protocol")
+    sampling = config.get("sampling", {})
+    if (int(sampling.get("uniform_negatives", -1)) != UNIFORM_NEGATIVES or
+            int(sampling.get("hybrid_uniform", -1)) != HYBRID_UNIFORM or
+            int(sampling.get("hybrid_hard", -1)) != HYBRID_HARD or
+            int(sampling.get("hard_pool_uniform", -1)) != HARD_POOL_UNIFORM or
+            int(config.get("feature_count", -1)) != 66 or int(config.get("max_candidates", -1)) != 100):
+        raise AssertionError("P008 fixed feature/sampling dimensions differ from the protocol")
     all_fits_path = root / "all_fits_frozen.json"
     if not all_fits_path.is_file():
         raise AssertionError("P008 all-fits freeze is missing")
@@ -261,6 +268,8 @@ def verify_sampled_training(root: Path, task_root: Path, config_path: Path | Non
         validation_queries = [query for query in queries_all if query.get("split") == "validation"]
         if not train_queries or not validation_queries:
             raise AssertionError(f"{cohort_id} train or validation queries are missing")
+        if any(len(query.get("candidate_items", [])) != 100 for query in train_queries + validation_queries):
+            raise AssertionError(f"{cohort_id} source query candidate blocks are not fixed K=100")
         records = _read_jsonl(prepare_dir / "records.jsonl")
         if len(records) != len(train_queries):
             raise AssertionError(f"{cohort_id} prepare records do not cover every original train query")
@@ -466,7 +475,8 @@ def verify_sampled_training(root: Path, task_root: Path, config_path: Path | Non
                          "exact_gate_cells": validation_cells})
 
     receipt = {"status": "verified", "experiment": "P008", "cohort_count": len(verified),
-               "cohorts": verified, "sampling_rng": "independent SHA256 first-eight-byte big-endian seed framing; NumPy default_rng",
+               "cohorts": verified, "all_fits_frozen_sha256": all_fits_sha,
+               "sampling_rng": "independent SHA256 first-eight-byte big-endian seed framing; NumPy default_rng",
                "teacher_hard_evidence": "Recorded P007 teacher scores are checked for ID alignment and deterministic score-descending/item-ID-ascending selection; teacher inference is not independently rerun.",
                "data_access": "No event payloads read; verifier uses query metadata, item first-seen inventory, numeric prepared matrices, prediction archives, and saved ranks."}
     output.parent.mkdir(parents=True, exist_ok=True)
