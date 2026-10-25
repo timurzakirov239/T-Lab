@@ -1,0 +1,99 @@
+{
+  "run_id": "p006_final_test",
+  "seed": 20261025,
+  "boundaries_raw": {
+    "train_query_start": 9752280,
+    "train_end": 20125775,
+    "validation_end": 23380165
+  },
+  "short_window_raw": 670390,
+  "half_life_raw": 670390,
+  "windows_raw": [
+    201117,
+    670390,
+    2011171
+  ],
+  "feature_count": 206,
+  "maximum_feature_columns": 256,
+  "primary_manual_control": "M_UIDC",
+  "model": {
+    "iterations": 120,
+    "depth": 5,
+    "learning_rate": 0.07,
+    "l2_leaf_reg": 5,
+    "thread_count": 2,
+    "loss_function": "Logloss",
+    "auto_class_weights": "Balanced",
+    "allow_writing_files": false,
+    "verbose": false,
+    "used_ram_limit": "512mb"
+  },
+  "metrics_k": [
+    10,
+    20
+  ],
+  "resource_limits": {
+    "runner_peak_rss_mb": 1100,
+    "minimum_available_mb": 150
+  },
+  "test_evaluation": true,
+  "scale256": false,
+  "max_candidates": 100,
+  "candidate_quotas": {
+    "popular": 25,
+    "repeat": 25,
+    "artist": 35,
+    "album": 15
+  },
+  "maximum_total_fits": 5,
+  "test_start_raw": 23380165,
+  "test_queries_per_user": 10,
+  "primary_comparison": [
+    "Auto_A2",
+    "M_UIDC"
+  ],
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 20261101,
+    "confidence": 0.95
+  },
+  "model_labels": [
+    "M_I",
+    "M_UIDC",
+    "Auto_A1",
+    "Auto_A2",
+    "Union"
+  ],
+  "cohorts": [
+    {
+      "id": "p001",
+      "query_seed": 20361025,
+      "development_run": "artifacts/p004_auto64",
+      "development_queries": "artifacts/pilot_001/queries.jsonl",
+      "history": "artifacts/pilot_001/data/events.parquet",
+      "mapping_dir": "artifacts/pilot_001/data",
+      "membership_metadata": "report/pilot_001_snapshot/data/metadata.json",
+      "snapshot": "report/p004_snapshot"
+    },
+    {
+      "id": "p005_20261026",
+      "query_seed": 20361026,
+      "development_run": "artifacts/p005_robustness/cohort_20261026",
+      "development_queries": "artifacts/p005_robustness/cohort_20261026/queries.jsonl",
+      "history": "artifacts/p005_robustness/cohort_20261026/data/events_full.parquet",
+      "mapping_dir": "artifacts/p005_robustness/cohort_20261026/data",
+      "membership_metadata": "report/p005_snapshot/cohort_20261026/data/metadata.json",
+      "snapshot": "report/p005_snapshot/cohort_20261026"
+    },
+    {
+      "id": "p005_20261027",
+      "query_seed": 20361027,
+      "development_run": "artifacts/p005_robustness/cohort_20261027",
+      "development_queries": "artifacts/p005_robustness/cohort_20261027/queries.jsonl",
+      "history": "artifacts/p005_robustness/cohort_20261027/data/events_full.parquet",
+      "mapping_dir": "artifacts/p005_robustness/cohort_20261027/data",
+      "membership_metadata": "report/p005_snapshot/cohort_20261027/data/metadata.json",
+      "snapshot": "report/p005_snapshot/cohort_20261027"
+    }
+  ]
+}
