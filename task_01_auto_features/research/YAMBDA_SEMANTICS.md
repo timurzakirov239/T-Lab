@@ -24,4 +24,3 @@
 - Локальный Parquet metadata: `task_01_auto_features/artifacts/data_audit/metadata_audit.json` (схемы и footer row counts, не проверка всех значений); измерения только выбранной пилотной когорты: `task_01_auto_features/artifacts/pilot_001/data/metadata.json`.
 
 В источниках не найден документированный метод выборки 50M, точная временная эпоха/период, гарантия полноты user histories в 5B, историчность mappings или SLA доступности событий. Все эти пункты остаются **не установленными**, а не отрицательными утверждениями о свойствах источника.
-
