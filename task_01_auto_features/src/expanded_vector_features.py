@@ -238,10 +238,25 @@ class FullCatalogFeatures:
                 reduced = np.zeros(len(self.item_ids), dtype=np.float64)
                 single = degrees == 1
                 reduced[items[single]] = edge_values[starts[single]]
+                multi = degrees > 1
+                minima = np.minimum.reduceat(edge_values, starts)
+                maxima = np.maximum.reduceat(edge_values, starts)
+                constant = multi & (minima == maxima)
+                exact_constants = constant & ((minima == 0.0) | (minima == 0.5) | (minima == 1.0))
+                reduced[items[exact_constants]] = minima[exact_constants]
+                repeated = constant & ~exact_constants
+                for raw_degree in np.unique(degrees[repeated]):
+                    degree = int(raw_degree)
+                    selected = repeated & (degrees == degree)
+                    distinct_values, inverse_values = np.unique(minima[selected], return_inverse=True)
+                    means = np.asarray([sum(float(value) for _ in range(degree)) / degree
+                                         for value in distinct_values], dtype=np.float64)
+                    reduced[items[selected]] = means[inverse_values]
                 # Python 3.12's float sum uses compensated accumulation. Match
-                # the reference reducer exactly for many-to-many mappings,
-                # where cancellation can otherwise change a float32 ULP.
-                for group_index in np.flatnonzero(degrees > 1):
+                # the reference reducer exactly for heterogeneous many-to-many
+                # mappings, where cancellation can change a float32 ULP. Most
+                # catalog groups are constant 0/.5 defaults and use the fast path.
+                for group_index in np.flatnonzero(multi & ~constant):
                     start, end = int(starts[group_index]), int(ends[group_index])
                     reduced[int(items[group_index])] = sum(
                         float(value) for value in edge_values[start:end]) / int(degrees[group_index])

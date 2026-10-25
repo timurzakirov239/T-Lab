@@ -174,13 +174,13 @@ def evaluate_full_catalog(
     models: dict[str, Any] = {}
     for label in scorers:
         values = np.concatenate(buffers[label]) if buffers[label] else np.empty(0, dtype=np.float64)
-        ordered = sorted(range(len(catalog)), key=lambda index: (-float(values[index]), int(catalog[index])))
+        ordered = np.lexsort((catalog, -values))
         rank = None
         target_score = None
         target_position = int(np.searchsorted(catalog, int(target_item)))
         if target_position < len(catalog) and int(catalog[target_position]) == int(target_item):
             target_score = float(values[target_position])
-            rank = next(position + 1 for position, index in enumerate(ordered) if index == target_position)
+            rank = int(np.flatnonzero(ordered == target_position)[0]) + 1
         models[label] = {
             "target_score": target_score,
             "target_rank": rank,
@@ -188,4 +188,5 @@ def evaluate_full_catalog(
                           for index in ordered[:int(top_k)]],
         }
     return {"catalog_size": int(len(catalog)), "catalog_items": catalog.tolist(),
-            "target_present": int(target_item) in set(map(int, catalog)), "models": models}
+            "target_present": bool(len(catalog) and target_position < len(catalog)
+                                   and int(catalog[target_position]) == int(target_item)), "models": models}
