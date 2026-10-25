@@ -2,6 +2,7 @@
 from pathlib import Path
 import html
 import re
+from urllib.parse import urlparse
 
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
@@ -65,7 +66,11 @@ def main():
         elif line.startswith("### "):
             story.append(Paragraph(inline(line[4:]), styles["H3RU"]))
         elif line.startswith("!["):
-            path = TASK / "report/submission_comparison_ru.png"
+            match = re.fullmatch(r"!\[[^\]]*\]\(([^)]+)\)", line)
+            if not match:
+                raise ValueError(f"Invalid image reference: {line}")
+            filename = Path(urlparse(match.group(1)).path).name
+            path = TASK / "report" / filename
             from PIL import Image as PILImage
             with PILImage.open(path) as im:
                 w, h = im.size
