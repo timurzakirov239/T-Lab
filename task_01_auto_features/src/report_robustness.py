@@ -90,6 +90,9 @@ def generate(root):
                    'repeat_ndcg20':m['strata']['repeat']['user_macro'].get('ndcg@20'),
                    'new_ndcg20':m['strata']['new']['user_macro'].get('ndcg@20'),
                    'reused_from':model.get('reused_from','')}
+            for stratum in ['repeat','new','warm','cold']:
+                for metric in ['ndcg','recall']:
+                    row[f'{stratum}_{metric}20'] = m['strata'][stratum]['user_macro'].get(f'{metric}@20')
             rows.append(row)
             lines.append(f"| {row['model']} | {row['columns']} | {row['ndcg20']:.6f} | {row['recall20']:.6f} |")
         lines += ['', f"Retrieval: {measured['counts']['targets_in_candidates']}/{measured['counts']['queries']} целей в кандидатах; "
@@ -97,15 +100,30 @@ def generate(root):
                   f"Repeat/new/cold запросов {measured['strata']['repeat']['query_count']}/"
                   f"{measured['strata']['new']['query_count']}/{measured['strata']['cold']['query_count']}. "
                   'Во всех оценках пропуски retrieval остаются нулями. Обучение условно на найденных целях; остальные кандидаты — unmarked, не доказанные отрицательные реакции.', '']
+        lines += ['Срезы по user-macro NDCG20 (внутри каждого среза усредняются только представленные там пользователи):', '',
+                  '| Срез | Запросов / пользователей | Manual UIDC | Auto A1 | Auto A2 | Union |',
+                  '| --- | ---: | ---: | ---: | ---: | ---: |']
+        for stratum in ['repeat','new','warm','cold']:
+            block=measured['strata'][stratum]
+            values=[by_label[label]['metrics']['strata'][stratum]['user_macro'].get('ndcg@20') for label in CORE[1:]]
+            formatted=['—' if value is None else f'{value:.6f}' for value in values]
+            lines.append(f"| {stratum} | {block['query_count']} / {block['user_count']} | "+' | '.join(formatted)+' |')
+        lines.append('')
         for family in ['A1','A2']:
             winner = selected['winners'][family]
-            lines.append(f"- {family}: выбран `{winner['label']}`, {len(winner['columns'])} столбцов, inner NDCG20={winner['inner_score']:.6f}.")
+            novel=sum(specs[column]['family']=='A2' for column in winner['columns'])
+            lines.append(f"- {family}: выбран `{winner['label']}`, {len(winner['columns'])} столбцов "
+                         f"({novel} новых относительно manual определений), inner NDCG20={winner['inner_score']:.6f}.")
             for column in winner['columns']:
                 spec = specs[column]
                 selections.append({'cohort_seed':seed,'family':family,'feature_id':spec['feature_id'],
                                    'group':spec['group'],'op':spec['op'],'window_raw':spec['window']})
         lines += ['', f"Union использует `{selected['chosen_auto_by_inner']['label']}` по внутреннему критерию; "
                   f"{len(selected['final_masks']['Union'])} столбцов после добавления к manual66 и удаления fit-дублей.", '']
+        train_counts=by_label['M_UIDC']['training']
+        lines += [f"В финальном обучении используются {train_counts['queries_with_target']}/{train_counts['queries_requested']} "
+                  f"train-запросов с найденной целью ({train_counts['candidate_rows_used']:,} candidate rows). "
+                  'Это ограничение условного обучения сохраняется для всех наборов признаков.', '']
         contributions = {}
         for label in CORE:
             model = by_label[label]
@@ -172,7 +190,7 @@ def generate(root):
     lines += ['', 'Частота выбора не доказывает причинный вклад признака. Состав и размер набора могут меняться вместе с когортой; '
               'малые разности на двух development-выборках не устанавливают популяционное превосходство. '
               'A2 против A1 одновременно меняет язык и выбранный поднабор; вклад отдельных операций здесь не изолирован. '
-              'Общие ограничения: небольшой локальный каталог, отсутствие независимого календарного периода, неизвестная полнота историй, '
+              'Общие ограничения: небольшой локальный каталог, одинаковые RAW временные интервалы всех репликаций, неизвестная полнота историй, '
               'фиксированный mapping snapshot и ограниченное покрытие retrieval.', '',
               'P004 остаётся исторической development reference: ManualUIDC NDCG20=0.075126, A1=0.078346, A2=0.078076; '
               'Union=Manual. P005 показывает, повторяется ли направление этих различий при новом UID sampling, '
@@ -192,8 +210,19 @@ def generate(root):
               '[компактная контрольная точка](p005_snapshot/README.md). '
               'CSV: [все варианты](p005_metrics.csv), [парные пользователи](p005_paired_users.csv), '
               '[парные запросы](p005_paired_queries.csv), [выражения](p005_selected_expressions.csv).', '',
+              'Результат проверки из изолированной копии без датасетов и predictions: '
+              '[portable verification](p005_portable_verification.json). '
+              'Методическая сверка итогов: [result review](../research/P005_RESULT_REVIEW.md).', '',
               'Следующий этап — зафиксировать итоговый метод и отдельный протокол test с учётом всех development-результатов; '
               'не выбирать новые параметры по тесту. Работа2 начнётся после завершения работы1.']
+    if len(complete)==2:
+        lead=[]
+        for label in ['Auto_A1','Auto_A2','Union']:
+            deltas=[next(r for r in rows if r['cohort_seed']==entry['seed'] and r['model']==label)['ndcg20']-
+                    next(r for r in rows if r['cohort_seed']==entry['seed'] and r['model']=='M_UIDC')['ndcg20'] for entry in complete]
+            lead.append(f"{label}: "+' / '.join(f'{value:+.6f}' for value in deltas))
+        lines[4:4]=['Измеренные ΔNDCG20 относительно ManualUIDC в порядке когорт20261026/20261027: '
+                    +'; '.join(lead)+'. Состав отобранных наборов зависит от когорты; устойчивое популяционное преимущество не установлено.', '']
     (report/'P005_ROBUSTNESS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
 
 

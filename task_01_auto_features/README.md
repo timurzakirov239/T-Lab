@@ -90,4 +90,8 @@ peak678,77МиБ. Все12 196 800A1cells совпали сP003;75tests pass,
 независимо пересчитаны25predictionresults. Это preliminary development,
 не доказательство устойчивого эффекта и не итоговый test.
 [Компактная контрольная точка](report/p004_snapshot/README.md).
-Далее — [проект P005](research/P005_ROBUSTNESS_PLAN.md) на новых когортах64.
+Следовавший этап P005 завершён; результаты ниже.
+
+## P005 — две новые когорты, завершён
+
+[Отчёт](report/P005_ROBUSTNESS.md), [протокол](configs/P005_PROTOCOL.md), [компактная контрольная точка](report/p005_snapshot/README.md). Внешних запросов514/518, по53 пользователя. A1 ΔNDCG20 к ManualUIDC −0,002495/+0,006428; A2 +0,000389/+0,002654; Union −0,006329/0. Состав отбора меняется; превосходство в популяции не установлено.88 tests,50 independently recomputed prediction sets, portable rank evidence85files/24396rows. Следующий шаг — итоговый метод и test-протокол; test ещё не оценён.

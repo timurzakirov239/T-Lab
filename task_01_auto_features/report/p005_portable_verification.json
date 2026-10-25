@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "tracked_files": 85,
+  "ranking_groups_recomputed": 50,
+  "rank_rows": 24396,
+  "failed_children_skipped": [],
+  "tolerance": 1e-12,
+  "snapshot_manifest_sha256": "8e5df61689d65b87ed0c462ce7f44b8c13bf6ee3d5b716f77cfee0be1d3860a7",
+  "isolated_copy": true,
+  "datasets_and_predictions_present": false
+}
