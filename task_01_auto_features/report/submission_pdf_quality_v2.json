@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "pages": 9,
+  "format": "A4",
+  "language": "Russian",
+  "pdf_sha256": "b07ab9234677b3afa3c5d08e4b927b8dca2c811981121cdcbb21cab995b90a5d",
+  "source_report_sha256": "052c8ee6b1b0daafe6f5748b6aa6b71511801254a67be0c48c66a05dd95edf3e",
+  "visual_review": "All 9 pages rendered and inspected; table columns visible, plot and caption together, page numbers only.",
+  "removed_service_text_checked": true,
+  "metric_tokens_checked": true,
+  "unique_six_decimal_metric_tokens_preserved": 103,
+  "new_experiments_run": false
+}

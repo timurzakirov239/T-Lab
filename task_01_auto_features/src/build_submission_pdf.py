@@ -4,7 +4,6 @@ import html
 import re
 
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
@@ -42,6 +41,9 @@ def main():
     styles.add(ParagraphStyle(name="H2RU", fontName="Arial-Bold", fontSize=13,
                              leading=17, spaceBefore=14, spaceAfter=8,
                              keepWithNext=True, textColor=colors.HexColor("#126173")))
+    styles.add(ParagraphStyle(name="H3RU", fontName="Arial-Bold", fontSize=10.5,
+                             leading=14, spaceBefore=9, spaceAfter=6,
+                             keepWithNext=True, textColor=colors.HexColor("#253247")))
     styles.add(ParagraphStyle(name="CellRU", fontName="Arial", fontSize=7.7,
                              leading=10.1, spaceAfter=0))
     styles.add(ParagraphStyle(name="CodeRU", fontName="Arial", fontSize=8.3,
@@ -60,13 +62,22 @@ def main():
             story.append(Paragraph(inline(line[2:]), styles["TitleRU"]))
         elif line.startswith("## "):
             story.append(Paragraph(inline(line[3:]), styles["H2RU"]))
+        elif line.startswith("### "):
+            story.append(Paragraph(inline(line[4:]), styles["H3RU"]))
         elif line.startswith("!["):
             path = TASK / "report/submission_comparison_ru.png"
             from PIL import Image as PILImage
             with PILImage.open(path) as im:
                 w, h = im.size
-            story.append(Image(str(path), width=width, height=width * h / w))
-            story.append(Spacer(1, 5 * mm))
+            figure = [Image(str(path), width=width, height=width * h / w),
+                      Spacer(1, 3 * mm)]
+            caption_index = i + 1
+            while caption_index < len(lines) and not lines[caption_index].strip():
+                caption_index += 1
+            if caption_index < len(lines) and lines[caption_index].startswith("Рисунок "):
+                figure.append(Paragraph(inline(lines[caption_index]), styles["BodyRU"]))
+                i = caption_index
+            story.append(KeepTogether(figure))
         elif line.startswith("```"):
             code = []
             i += 1
@@ -87,7 +98,7 @@ def main():
                 weights = [1.15, 2.5, 1.65]
             if columns == 2:
                 weights = [1, 3.2]
-            if rows[0][0] == "Группа":
+            if columns == 3 and rows[0][0] == "Группа":
                 weights = [1.2, 2.8, 0.8]
             data = [[Paragraph(inline(c), styles["CellRU"]) for c in row] for row in rows]
             table = Table(data, colWidths=[width * w / sum(weights) for w in weights],
@@ -113,11 +124,8 @@ def main():
 
     def page(canvas, doc):
         canvas.saveState()
-        canvas.setStrokeColor(colors.HexColor("#cddde4"))
-        canvas.line(18 * mm, 17 * mm, 192 * mm, 17 * mm)
         canvas.setFont("Arial", 7.5)
         canvas.setFillColor(colors.HexColor("#607381"))
-        canvas.drawString(18 * mm, 12 * mm, "T-Lab | Автоматизация признаков | 25.10.2026")
         canvas.drawRightString(192 * mm, 12 * mm, str(doc.page))
         canvas.restoreState()
 
