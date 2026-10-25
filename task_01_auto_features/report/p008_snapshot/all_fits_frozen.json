@@ -1,0 +1,21 @@
+{
+  "experiment": "P008",
+  "frozen_before_evaluation": true,
+  "config_sha256": "f7a6299a5674606db01ff0c1716e7b6230a860f56d70a6cbf1b6279edac528aa",
+  "protocol_sha256": "e98385b8f542eed47bd1cb1c32d971ad14353267a1574ccb46a4242835e4584e",
+  "source_sha256": {
+    "run_sampled_training.py": "74328d94bb4222829e063bc79a9933c4849bd61652fa9ec54aa1649f523a6dd7",
+    "prepare_sampled_training.py": "558e849b3f184b1974d6671efc85527fa06e729cbee76eb44c7ea0a28f3723ec",
+    "sampled_negatives.py": "6c070fb1a48095444fd5a9ba960c230ea694a2f3d3560ba3589f48f9d397e68d",
+    "auto_features.py": "1cf99007be2fc0a36096ac5263b2dc691430f9f48fe7d97fb097faa4f47961bb",
+    "pilot_features.py": "274d7e717226bcae817873e3afc8509d7f5d4078b894547f178e29b5fb0b9dc7",
+    "expanded_vector_features.py": "8e9390d21c6132a41c28ca6c0e4c2e06ea8068601c252edba8afaeb607bb2e7b",
+    "expanded_catalog.py": "7bf33e8bdd2033f98e40601845e49b5bbb73c914d7b27269b6a562aec4ccb008",
+    "expanded_metrics.py": "286d555f8a1e81b7b96dd8409968ece696fa43b9cfb30776ff4207f07fcf4f3e"
+  },
+  "cohort_fit_status_sha256": {
+    "p001": "737ebb0fb710f895aedc9e6da3fe6b836ff6f839ae0de5e6197948443023b8cf",
+    "p005_20261026": "fbd144ee55d22ee5e5f23c40ad640a0307c81120ddbcc55db5651e198c7c48aa",
+    "p005_20261027": "07f3992ead10e7c43cb3b66b557e9acce629fab7714602a39b971d2eb065b397"
+  }
+}

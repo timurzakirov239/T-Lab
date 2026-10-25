@@ -1,0 +1,225 @@
+{
+  "label": "M_I",
+  "stage": "final",
+  "columns": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "spec_ids": [
+    "i_events_all",
+    "i_listen_all",
+    "i_like_all",
+    "i_dislike_all",
+    "i_events_short",
+    "i_listen_short",
+    "i_like_short",
+    "i_dislike_short",
+    "i_last_age",
+    "i_known",
+    "i_artist_degree",
+    "i_album_degree"
+  ],
+  "feature_count": 12,
+  "training": {
+    "queries_requested": 1397,
+    "queries_with_target": 336,
+    "queries_missing_target": 1061,
+    "target_coverage": 0.24051539012168932,
+    "candidate_rows_examined": 139700,
+    "candidate_rows_used": 33600,
+    "positive_rows": 336
+  },
+  "fit_seconds": 0.548476,
+  "predict_evaluate_seconds": 0.141593,
+  "importance_fit_only": [
+    14.91923700624698,
+    12.793323045984165,
+    4.6167390208130845,
+    2.7983781908143355,
+    12.972224392139875,
+    10.009372928216948,
+    2.793784023854523,
+    0.5125141919135868,
+    35.65444836676493,
+    0.0,
+    0.0005057514750832471,
+    2.9294730817764836
+  ],
+  "metrics": {
+    "overall": {
+      "query_count": 518,
+      "user_count": 53,
+      "target_known_before_count": 461,
+      "target_known_before_fraction": 0.88996138996139,
+      "repeat_count": 309,
+      "repeat_fraction": 0.5965250965250966,
+      "candidate_recall": 0.21428571428571427,
+      "query_micro": {
+        "recall@10": 0.08687258687258688,
+        "ndcg@10": 0.04880900805383991,
+        "recall@20": 0.12548262548262548,
+        "ndcg@20": 0.05858872918050084
+      },
+      "user_macro": {
+        "recall@10": 0.08490566037735849,
+        "ndcg@10": 0.04770389843752655,
+        "recall@20": 0.12264150943396228,
+        "ndcg@20": 0.05726219191603666
+      }
+    },
+    "by_split": {
+      "train": {
+        "query_count": 0,
+        "user_count": 0,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": null,
+        "repeat_count": 0,
+        "repeat_fraction": null,
+        "candidate_recall": null,
+        "query_micro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        },
+        "user_macro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        }
+      },
+      "validation": {
+        "query_count": 518,
+        "user_count": 53,
+        "target_known_before_count": 461,
+        "target_known_before_fraction": 0.88996138996139,
+        "repeat_count": 309,
+        "repeat_fraction": 0.5965250965250966,
+        "candidate_recall": 0.21428571428571427,
+        "query_micro": {
+          "recall@10": 0.08687258687258688,
+          "ndcg@10": 0.04880900805383991,
+          "recall@20": 0.12548262548262548,
+          "ndcg@20": 0.05858872918050084
+        },
+        "user_macro": {
+          "recall@10": 0.08490566037735849,
+          "ndcg@10": 0.04770389843752655,
+          "recall@20": 0.12264150943396228,
+          "ndcg@20": 0.05726219191603666
+        }
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 309,
+        "user_count": 48,
+        "target_known_before_count": 309,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 309,
+        "repeat_fraction": 1.0,
+        "candidate_recall": 0.35275080906148865,
+        "query_micro": {
+          "recall@10": 0.14563106796116504,
+          "ndcg@10": 0.08182222062100024,
+          "recall@20": 0.21035598705501618,
+          "ndcg@20": 0.0982167045809043
+        },
+        "user_macro": {
+          "recall@10": 0.14184027777777777,
+          "ndcg@10": 0.08061186174801047,
+          "recall@20": 0.20138888888888887,
+          "ndcg@20": 0.09564013392751107
+        }
+      },
+      "new": {
+        "query_count": 209,
+        "user_count": 51,
+        "target_known_before_count": 152,
+        "target_known_before_fraction": 0.7272727272727273,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.009569377990430622,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      },
+      "warm": {
+        "query_count": 461,
+        "user_count": 53,
+        "target_known_before_count": 461,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 309,
+        "repeat_fraction": 0.6702819956616052,
+        "candidate_recall": 0.24078091106290672,
+        "query_micro": {
+          "recall@10": 0.09761388286334056,
+          "ndcg@10": 0.054843961327308184,
+          "recall@20": 0.14099783080260303,
+          "ndcg@20": 0.06583288875379485
+        },
+        "user_macro": {
+          "recall@10": 0.09356094639113507,
+          "ndcg@10": 0.05301071781868643,
+          "recall@20": 0.13355046421084157,
+          "ndcg@20": 0.0631365169795233
+        }
+      },
+      "cold": {
+        "query_count": 57,
+        "user_count": 33,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": 0.0,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 518,
+      "users": 53,
+      "target_known_before": 461,
+      "target_not_known_before": 57,
+      "repeat_targets": 309,
+      "new_targets": 209,
+      "targets_in_candidates": 111,
+      "targets_missing_from_candidates": 407
+    }
+  },
+  "prediction_file": "predictions\\M_I.npz",
+  "prediction_sha256": "4ef3c15334c408fc23654737105ad3dedffe346fb0f2c1e58ffb078ff2d516e1",
+  "model_file": "models\\M_I.cbm",
+  "model_sha256": "ecc26fd871601599a145ad865469fa9ecafae664d9ca4fbec6dfbf244eeed119"
+}

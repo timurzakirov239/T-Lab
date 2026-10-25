@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "isolated_verifier": {
+    "status": "PASS",
+    "tracked_files": 29,
+    "rank_rows": 27558,
+    "pooled_metric_groups": 18,
+    "cohort_metric_groups": 54,
+    "paired_contrasts": 29,
+    "independent_metric_implementation": "NumPy + expanded_metrics; no model/event scan"
+  },
+  "copied_source_files": 2,
+  "copied_checkpoint_files": 30,
+  "histories_matrices_models_or_predictions_copied": false,
+  "original_workspace_in_pythonpath": false
+}

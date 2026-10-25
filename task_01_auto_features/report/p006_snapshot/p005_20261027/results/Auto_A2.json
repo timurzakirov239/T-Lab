@@ -1,0 +1,249 @@
+{
+  "label": "Auto_A2",
+  "stage": "final_test",
+  "evaluation_period": "test",
+  "columns": [
+    0,
+    4,
+    5,
+    10,
+    11,
+    15,
+    18,
+    22,
+    23,
+    26,
+    34,
+    49,
+    52,
+    57,
+    60,
+    66,
+    67,
+    70,
+    71,
+    78,
+    79,
+    82,
+    83,
+    86,
+    87,
+    106,
+    116,
+    123,
+    124,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    144,
+    146,
+    160,
+    162,
+    163,
+    164,
+    168,
+    169,
+    172,
+    174,
+    175,
+    178,
+    180,
+    181,
+    182,
+    184,
+    186,
+    188,
+    192,
+    195,
+    197,
+    200,
+    201,
+    204,
+    205
+  ],
+  "feature_count": 64,
+  "training": {
+    "queries_requested": 1915,
+    "queries_with_target": 447,
+    "queries_missing_target": 1468,
+    "target_coverage": 0.23342036553524803,
+    "candidate_rows_examined": 191500,
+    "candidate_rows_used": 44700,
+    "positive_rows": 447
+  },
+  "fit_seconds": 2.769945,
+  "model_file": "models\\Auto_A2.cbm",
+  "model_sha256": "3cba8277ef3b4fd4130cfa1f0edbcd63f3ad93348aa0fd611bf59fa855a505e8",
+  "prediction_file": "predictions\\Auto_A2.npz",
+  "prediction_sha256": "8bba5795b8f8e27012b28ca608417ce1eeab9aff3c227052941cbe7e57839266",
+  "metrics": {
+    "overall": {
+      "query_count": 540,
+      "user_count": 55,
+      "target_known_before_count": 456,
+      "target_known_before_fraction": 0.8444444444444444,
+      "repeat_count": 344,
+      "repeat_fraction": 0.6370370370370371,
+      "candidate_recall": 0.24814814814814815,
+      "query_micro": {
+        "recall@10": 0.08518518518518518,
+        "ndcg@10": 0.052829024591787746,
+        "recall@20": 0.12962962962962962,
+        "ndcg@20": 0.06400331577071727
+      },
+      "user_macro": {
+        "recall@10": 0.08441558441558442,
+        "ndcg@10": 0.05264771765115784,
+        "recall@20": 0.12805194805194803,
+        "ndcg@20": 0.06361883989956138
+      }
+    },
+    "by_split": {
+      "train": {
+        "query_count": 0,
+        "user_count": 0,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": null,
+        "repeat_count": 0,
+        "repeat_fraction": null,
+        "candidate_recall": null,
+        "query_micro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        },
+        "user_macro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        }
+      },
+      "validation": {
+        "query_count": 540,
+        "user_count": 55,
+        "target_known_before_count": 456,
+        "target_known_before_fraction": 0.8444444444444444,
+        "repeat_count": 344,
+        "repeat_fraction": 0.6370370370370371,
+        "candidate_recall": 0.24814814814814815,
+        "query_micro": {
+          "recall@10": 0.08518518518518518,
+          "ndcg@10": 0.052829024591787746,
+          "recall@20": 0.12962962962962962,
+          "ndcg@20": 0.06400331577071727
+        },
+        "user_macro": {
+          "recall@10": 0.08441558441558442,
+          "ndcg@10": 0.05264771765115784,
+          "recall@20": 0.12805194805194803,
+          "ndcg@20": 0.06361883989956138
+        }
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 344,
+        "user_count": 53,
+        "target_known_before_count": 344,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 344,
+        "repeat_fraction": 1.0,
+        "candidate_recall": 0.35755813953488375,
+        "query_micro": {
+          "recall@10": 0.13372093023255813,
+          "ndcg@10": 0.08292928278943426,
+          "recall@20": 0.20348837209302326,
+          "ndcg@20": 0.10047032126798643
+        },
+        "user_macro": {
+          "recall@10": 0.16870320455226112,
+          "ndcg@10": 0.10362623526131554,
+          "recall@20": 0.23554207846660682,
+          "ndcg@20": 0.12045154196754067
+        }
+      },
+      "new": {
+        "query_count": 196,
+        "user_count": 53,
+        "target_known_before_count": 112,
+        "target_known_before_fraction": 0.5714285714285714,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.05612244897959184,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      },
+      "warm": {
+        "query_count": 456,
+        "user_count": 55,
+        "target_known_before_count": 456,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 344,
+        "repeat_fraction": 0.7543859649122807,
+        "candidate_recall": 0.29385964912280704,
+        "query_micro": {
+          "recall@10": 0.10087719298245613,
+          "ndcg@10": 0.06256068701659076,
+          "recall@20": 0.15350877192982457,
+          "ndcg@20": 0.07579340025479678
+        },
+        "user_macro": {
+          "recall@10": 0.097005772005772,
+          "ndcg@10": 0.059882050473213176,
+          "recall@20": 0.14538239538239536,
+          "ndcg@20": 0.07204118080787272
+        }
+      },
+      "cold": {
+        "query_count": 84,
+        "user_count": 37,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": 0.0,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 540,
+      "users": 55,
+      "target_known_before": 456,
+      "target_not_known_before": 84,
+      "repeat_targets": 344,
+      "new_targets": 196,
+      "targets_in_candidates": 134,
+      "targets_missing_from_candidates": 406
+    }
+  }
+}

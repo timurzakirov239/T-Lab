@@ -1,0 +1,38 @@
+{
+  "status": "verified",
+  "experiment": "P007",
+  "cohort_count": 3,
+  "cohorts": [
+    {
+      "cohort": "p001",
+      "queries": 499,
+      "search_models": 8,
+      "rank100_groups": 9,
+      "full_catalog_groups": 9,
+      "exact_gate_cells": 10279400,
+      "status": "verified"
+    },
+    {
+      "cohort": "p005_20261026",
+      "queries": 514,
+      "search_models": 8,
+      "rank100_groups": 9,
+      "full_catalog_groups": 9,
+      "exact_gate_cells": 10588400,
+      "status": "verified"
+    },
+    {
+      "cohort": "p005_20261027",
+      "queries": 518,
+      "search_models": 8,
+      "rank100_groups": 9,
+      "full_catalog_groups": 9,
+      "exact_gate_cells": 10670800,
+      "status": "verified"
+    }
+  ],
+  "tolerance": 1e-12,
+  "independent_metric_implementation": "expanded_metrics.summarize_ranks; no evaluator or event scan",
+  "popularity_rank_source": "independently reconstructed from SHA-pinned frozen features.npy i_listen_all column and feature_schema.json; P001 query popularity_scores are additionally checked when available",
+  "full_rank_limit": "Top-20 ranks are independently checked against ordered top_items and target scores. Exact ranks beyond 20 are recorded and hash-verified but cannot be independently reconstructed because full score vectors are not retained."
+}

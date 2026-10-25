@@ -1,0 +1,35 @@
+{
+  "status": "published",
+  "repository": "https://github.com/timurzakirov239/T-Lab",
+  "private": false,
+  "default_branch": "main",
+  "release": "https://github.com/timurzakirov239/T-Lab/releases/tag/submission-v1.3",
+  "source_commit": "4bb05eaf1fe7b90aabcd331b6b682b6a4f81446e",
+  "assets": [
+    {
+      "name": "SHA256SUMS.txt",
+      "size": 369,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.3/SHA256SUMS.txt"
+    },
+    {
+      "name": "T-Lab_Archive_Verification.json",
+      "size": 2165,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.3/T-Lab_Archive_Verification.json"
+    },
+    {
+      "name": "T-Lab_Report_RU.md",
+      "size": 60808,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.3/T-Lab_Report_RU.md"
+    },
+    {
+      "name": "T-Lab_Report_RU.pdf",
+      "size": 655252,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.3/T-Lab_Report_RU.pdf"
+    },
+    {
+      "name": "T-Lab_Source_and_Evidence.zip",
+      "size": 3808592,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.3/T-Lab_Source_and_Evidence.zip"
+    }
+  ]
+}

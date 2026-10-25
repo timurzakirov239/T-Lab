@@ -1,0 +1,23 @@
+{
+  "experiment": "P006",
+  "isolated_copy": true,
+  "copied_modules": [
+    "verify_final_snapshot.py",
+    "verify_auto_checkpoint.py"
+  ],
+  "copied_data": "compact snapshot only",
+  "dataset_model_paths_present": false,
+  "model_training_performed": false,
+  "verification": {
+    "status": "PASS",
+    "tracked_files": 68,
+    "cohort_count": 3,
+    "complete_cohorts": 3,
+    "failed_cohorts": [],
+    "ranking_groups_recomputed": 18,
+    "rank_rows": 10158,
+    "pooled_metrics_recomputed": true,
+    "primary_bootstrap_recomputed": true,
+    "tolerance": 1e-12
+  }
+}

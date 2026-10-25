@@ -1,0 +1,15 @@
+{
+  "newFileLocation": "folder",
+  "newFileFolderPath": "notes",
+  "attachmentFolderPath": "notes/attachments",
+  "userIgnoreFilters": [
+    "task_01_auto_features/data/raw/",
+    "task_01_auto_features/data/processed/",
+    "task_01_auto_features/artifacts/",
+    "task_02_rl_recommendations/data/raw/",
+    "task_02_rl_recommendations/data/processed/",
+    "task_02_rl_recommendations/artifacts/",
+    ".venv/",
+    "__pycache__/"
+  ]
+}

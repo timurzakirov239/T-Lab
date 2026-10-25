@@ -1,0 +1,47 @@
+{
+  "experiment": "P007",
+  "cohort": "p001",
+  "stage": "gate",
+  "status": "complete",
+  "final_test_evaluated": false,
+  "selection_frozen_sha256": "693559e96abbac826d74136f263c9941b4d71871212ba343092b9bb5ab4ecdc3",
+  "gate_directory": "catalog_gate_v3",
+  "config_sha256": "9b1ef366ee314dd05ce22d29be48ff56f707963f3c53373560005e940ccd7640",
+  "protocol_sha256": "e6cd93b6fb6dccd554b982e86b051e247132415f343bb33bfdcb4388837c1afd",
+  "source_sha256": {
+    "expanded_vector_features.py": "8e9390d21c6132a41c28ca6c0e4c2e06ea8068601c252edba8afaeb607bb2e7b",
+    "expanded_catalog.py": "7bf33e8bdd2033f98e40601845e49b5bbb73c914d7b27269b6a562aec4ccb008",
+    "run_expanded_catalog.py": "a50da6bdcbbe81401db4731a4f4307f280abaeed1d341c4d61ea5a6ca9494e7e",
+    "expanded_metrics.py": "286d555f8a1e81b7b96dd8409968ece696fa43b9cfb30776ff4207f07fcf4f3e"
+  },
+  "progress": {
+    "queries_completed": 499,
+    "cells_compared": 10279400,
+    "catalog_rows_scored": 0
+  },
+  "inputs_sha256": {
+    "artifacts/p004_auto64/features.npy": "ff0cfaa6ba1e4999f84d8fa4e7e4da9981f9cfc98afed28c66956041d47953de",
+    "artifacts/p004_auto64/feature_inputs.jsonl": "7cbd3241c7558f84aa4daa3ce5bdd40830ed39cd71047be2cff0d8b899edabca",
+    "artifacts/p004_auto64/feature_schema.json": "e365ef4f953fa98f92e4a58b50d4ef3085632e6708a232fb6f34ca8889181e09",
+    "artifacts/p004_auto64/selection_frozen.json": "c7f43fef5c7e93b9e64a4f7ee6063b4247fb7cb8cb768378b787303003c7139d",
+    "artifacts/pilot_001/queries.jsonl": "0cf3d126a80dda71a3f9289f10efc5b1a6527495e2e9042a4f0357c26a643233",
+    "artifacts/pilot_001/data/events.parquet": "b65dd4c15e1772e42c7971230550f6559b3614ce07db153106576552391f5f36"
+  },
+  "exact_gate": {
+    "identical_float32_bytes": true,
+    "cells": 10279400,
+    "values_sha256": "0381df423fd60531c2a1c7fffd351d2f739fa158dd829584fccff78d4d99cae9",
+    "queries": 499
+  },
+  "elapsed_seconds": 364.637203,
+  "resources": {
+    "peak_process_rss_mb": 650.74,
+    "minimum_available_system_mb": 1047.07,
+    "sampling_interval_seconds": 0.25,
+    "limits": {
+      "runner_peak_rss_mb": 1100,
+      "minimum_available_mb": 150
+    },
+    "limit_exceeded": null
+  }
+}

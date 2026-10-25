@@ -1,0 +1,47 @@
+{
+  "status": "verified",
+  "experiment": "P008",
+  "cohort_count": 3,
+  "cohorts": [
+    {
+      "cohort": "p001",
+      "status": "verified",
+      "train_queries": 1349,
+      "warm_queries": 1153,
+      "hit_queries": 349,
+      "cold_queries": 196,
+      "validation_queries": 499,
+      "models": 8,
+      "rank_labels": 9,
+      "exact_gate_cells": 3293400
+    },
+    {
+      "cohort": "p005_20261026",
+      "status": "verified",
+      "train_queries": 1517,
+      "warm_queries": 1282,
+      "hit_queries": 330,
+      "cold_queries": 235,
+      "validation_queries": 514,
+      "models": 8,
+      "rank_labels": 9,
+      "exact_gate_cells": 3392400
+    },
+    {
+      "cohort": "p005_20261027",
+      "status": "verified",
+      "train_queries": 1397,
+      "warm_queries": 1209,
+      "hit_queries": 336,
+      "cold_queries": 188,
+      "validation_queries": 518,
+      "models": 8,
+      "rank_labels": 9,
+      "exact_gate_cells": 3418800
+    }
+  ],
+  "all_fits_frozen_sha256": "5bf70ed4acd24f706a4a8fb6a0e14194006cde228810b13f8b74a8947722f4e7",
+  "sampling_rng": "independent SHA256 first-eight-byte big-endian seed framing; NumPy default_rng",
+  "teacher_hard_evidence": "Recorded P007 teacher scores are checked for ID alignment and deterministic score-descending/item-ID-ascending selection; teacher inference is not independently rerun.",
+  "data_access": "No event payloads read; verifier uses query metadata, item first-seen inventory, numeric prepared matrices, prediction archives, and saved ranks."
+}

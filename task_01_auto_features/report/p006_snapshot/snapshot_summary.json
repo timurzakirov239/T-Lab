@@ -1,0 +1,61 @@
+{
+  "experiment": "P006",
+  "parent_status": "complete",
+  "final_test_evaluated": true,
+  "cohorts": [
+    {
+      "id": "p001",
+      "run_dir": "p001",
+      "status": "complete",
+      "final_test_evaluated": true,
+      "rank_rows": 3504,
+      "rank_groups": [
+        "Popularity",
+        "M_I",
+        "M_UIDC",
+        "Auto_A1",
+        "Auto_A2",
+        "Union"
+      ]
+    },
+    {
+      "id": "p005_20261026",
+      "run_dir": "p005_20261026",
+      "status": "complete",
+      "final_test_evaluated": true,
+      "rank_rows": 3414,
+      "rank_groups": [
+        "Popularity",
+        "M_I",
+        "M_UIDC",
+        "Auto_A1",
+        "Auto_A2",
+        "Union"
+      ]
+    },
+    {
+      "id": "p005_20261027",
+      "run_dir": "p005_20261027",
+      "status": "complete",
+      "final_test_evaluated": true,
+      "rank_rows": 3240,
+      "rank_groups": [
+        "Popularity",
+        "M_I",
+        "M_UIDC",
+        "Auto_A1",
+        "Auto_A2",
+        "Union"
+      ]
+    }
+  ],
+  "expected_models_per_complete_cohort": [
+    "Popularity",
+    "M_I",
+    "M_UIDC",
+    "Auto_A1",
+    "Auto_A2",
+    "Union"
+  ],
+  "rank_group_count": 18
+}

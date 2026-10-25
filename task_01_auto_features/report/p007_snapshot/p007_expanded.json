@@ -1,0 +1,94 @@
+{
+  "run_id": "p007_expanded_search",
+  "seed": 20261025,
+  "boundaries_raw": {
+    "train_query_start": 9752280,
+    "train_end": 20125775,
+    "validation_end": 23380165
+  },
+  "short_window_raw": 670390,
+  "half_life_raw": 670390,
+  "windows_raw": [
+    201117,
+    670390,
+    2011171
+  ],
+  "feature_count": 206,
+  "maximum_feature_columns": 256,
+  "primary_manual_control": "M_UIDC",
+  "model": {
+    "iterations": 120,
+    "depth": 5,
+    "learning_rate": 0.07,
+    "l2_leaf_reg": 5,
+    "thread_count": 2,
+    "loss_function": "Logloss",
+    "auto_class_weights": "Balanced",
+    "allow_writing_files": false,
+    "verbose": false,
+    "used_ram_limit": "512mb"
+  },
+  "metrics_k": [
+    10,
+    20
+  ],
+  "resource_limits": {
+    "runner_peak_rss_mb": 1100,
+    "minimum_available_mb": 150
+  },
+  "test_evaluation": false,
+  "scale256": false,
+  "max_candidates": 100,
+  "candidate_quotas": {
+    "popular": 25,
+    "repeat": 25,
+    "artist": 35,
+    "album": 15
+  },
+  "maximum_total_fits": 80,
+  "test_start_raw": null,
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 20261102
+  },
+  "cohorts": [
+    {
+      "id": "p001",
+      "development_run": "artifacts/p004_auto64",
+      "development_queries": "artifacts/pilot_001/queries.jsonl",
+      "history": "artifacts/pilot_001/data/events.parquet",
+      "mapping_dir": "artifacts/pilot_001/data"
+    },
+    {
+      "id": "p005_20261026",
+      "development_run": "artifacts/p005_robustness/cohort_20261026",
+      "development_queries": "artifacts/p005_robustness/cohort_20261026/queries.jsonl",
+      "history": "artifacts/p005_robustness/cohort_20261026/data/events_full.parquet",
+      "mapping_dir": "artifacts/p005_robustness/cohort_20261026/data"
+    },
+    {
+      "id": "p005_20261027",
+      "development_run": "artifacts/p005_robustness/cohort_20261027",
+      "development_queries": "artifacts/p005_robustness/cohort_20261027/queries.jsonl",
+      "history": "artifacts/p005_robustness/cohort_20261027/data/events_full.parquet",
+      "mapping_dir": "artifacts/p005_robustness/cohort_20261027/data"
+    }
+  ],
+  "maximum_search_fits_per_method": 10,
+  "search_seed": 20261102,
+  "random_trials": 10,
+  "catalog_chunk": 2048,
+  "evaluation_split": "validation",
+  "selection_quantile": 0.7,
+  "stability_prefix_quantile": 0.5,
+  "methods": [
+    "M_I",
+    "M_UIDC",
+    "Original_A1",
+    "Original_A2",
+    "Random206",
+    "Permutation206",
+    "Stable206",
+    "ForwardGroups66"
+  ]
+}

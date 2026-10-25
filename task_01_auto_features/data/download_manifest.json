@@ -1,0 +1,165 @@
+{
+  "status": "complete",
+  "started_at_utc": "2026-10-25T11:57:38.756548+00:00",
+  "kion_revision": "f69775be31fa5779907cf0a92ddedb70037fb5ae",
+  "yambda_revision": "dd6f3a19eef5866e346c3270e098baa641a44948",
+  "selection": "KION public interactions and original Russian metadata; Yambda flat/50m unified events and artist/album mappings. No local event sampling.",
+  "files": [
+    {
+      "dataset": "kion",
+      "remote_path": "README.md",
+      "local_path": "kion/SOURCE_README.md",
+      "url": "https://raw.githubusercontent.com/irsafilo/KION_DATASET/f69775be31fa5779907cf0a92ddedb70037fb5ae/README.md",
+      "expected_size": 5584,
+      "expected_git_blob_sha1": "42c67afc84eeaee231ffacb8307511b1bab54800",
+      "bytes": 5584,
+      "sha256": "c7b52c8a92bd0c8dc76a7b0486d3c711087b550cdb7241a8ae0cb46c4f8df323",
+      "verified_at_utc": "2026-10-25T11:57:38.766616+00:00"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "README.md",
+      "local_path": "yambda/SOURCE_README.md",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/README.md",
+      "expected_size": 11927,
+      "expected_git_blob_sha1": "1ee8199864f4748462a26eb9e15745af7481e6bc",
+      "bytes": 11927,
+      "sha256": "6cad3edc2f564137e2440df0b30ca1b3563a16802ae39c82e198b2b7dfcfcf32",
+      "verified_at_utc": "2026-10-25T11:57:38.766616+00:00"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "LICENSE",
+      "local_path": "yambda/LICENSE",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/LICENSE",
+      "expected_size": 549,
+      "expected_git_blob_sha1": "25f8a76168b8b261ba361312435a55b65cfb78fa",
+      "bytes": 549,
+      "sha256": "ca813f6eb8cffc9d35c80d37e2e15c33b786d65c4e73a1f4a002e95ae21e819d",
+      "verified_at_utc": "2026-10-25T11:57:38.770800+00:00"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "artist_item_mapping.parquet",
+      "local_path": "yambda/artist_item_mapping.parquet",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/artist_item_mapping.parquet",
+      "expected_size": 38274621,
+      "expected_sha256": "cf1110aa2413ed70008ec9232d395660b2181ffda731002fb74da54e87b6f25d",
+      "bytes": 38274621,
+      "sha256": "cf1110aa2413ed70008ec9232d395660b2181ffda731002fb74da54e87b6f25d",
+      "verified_at_utc": "2026-10-25T11:57:38.999668+00:00"
+    },
+    {
+      "dataset": "kion",
+      "remote_path": "data_original.zip",
+      "local_path": "kion/data_original.zip",
+      "url": "https://raw.githubusercontent.com/irsafilo/KION_DATASET/f69775be31fa5779907cf0a92ddedb70037fb5ae/data_original.zip",
+      "expected_size": 78795295,
+      "expected_git_blob_sha1": "a9cc66b9a24efed690472577b7fece61877520c4",
+      "bytes": 78795295,
+      "sha256": "50fc5b7db78cbda4c3d0ee5bb5bea4c416cff41e8af58aab0b661d0d3e9dfa9b",
+      "verified_at_utc": "2026-10-25T11:57:39.219442+00:00"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "album_item_mapping.parquet",
+      "local_path": "yambda/album_item_mapping.parquet",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/album_item_mapping.parquet",
+      "expected_size": 54528894,
+      "expected_sha256": "559b6576063d96280414574b32292eee7b47ee0b9f2952cb3ae670a5d19125e4",
+      "bytes": 54528894,
+      "sha256": "559b6576063d96280414574b32292eee7b47ee0b9f2952cb3ae670a5d19125e4",
+      "verified_at_utc": "2026-10-25T11:57:39.290889+00:00"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "flat/50m/multi_event.parquet",
+      "local_path": "yambda/flat/50m/multi_event.parquet",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/flat/50m/multi_event.parquet",
+      "expected_size": 384465869,
+      "expected_sha256": "b92f6c97277a554c8a7d6cfea900eca51639fd53a3e6c4fa58b82e35fd35804d",
+      "bytes": 384465869,
+      "sha256": "b92f6c97277a554c8a7d6cfea900eca51639fd53a3e6c4fa58b82e35fd35804d",
+      "verified_at_utc": "2026-10-25T11:57:40.465236+00:00"
+    }
+  ],
+  "planned_files": [
+    {
+      "dataset": "kion",
+      "remote_path": "README.md",
+      "local_path": "kion/SOURCE_README.md",
+      "url": "https://raw.githubusercontent.com/irsafilo/KION_DATASET/f69775be31fa5779907cf0a92ddedb70037fb5ae/README.md",
+      "expected_size": 5584,
+      "expected_git_blob_sha1": "42c67afc84eeaee231ffacb8307511b1bab54800"
+    },
+    {
+      "dataset": "kion",
+      "remote_path": "data_original.zip",
+      "local_path": "kion/data_original.zip",
+      "url": "https://raw.githubusercontent.com/irsafilo/KION_DATASET/f69775be31fa5779907cf0a92ddedb70037fb5ae/data_original.zip",
+      "expected_size": 78795295,
+      "expected_git_blob_sha1": "a9cc66b9a24efed690472577b7fece61877520c4"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "README.md",
+      "local_path": "yambda/SOURCE_README.md",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/README.md",
+      "expected_size": 11927,
+      "expected_git_blob_sha1": "1ee8199864f4748462a26eb9e15745af7481e6bc"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "LICENSE",
+      "local_path": "yambda/LICENSE",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/LICENSE",
+      "expected_size": 549,
+      "expected_git_blob_sha1": "25f8a76168b8b261ba361312435a55b65cfb78fa"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "flat/50m/multi_event.parquet",
+      "local_path": "yambda/flat/50m/multi_event.parquet",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/flat/50m/multi_event.parquet",
+      "expected_size": 384465869,
+      "expected_sha256": "b92f6c97277a554c8a7d6cfea900eca51639fd53a3e6c4fa58b82e35fd35804d"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "artist_item_mapping.parquet",
+      "local_path": "yambda/artist_item_mapping.parquet",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/artist_item_mapping.parquet",
+      "expected_size": 38274621,
+      "expected_sha256": "cf1110aa2413ed70008ec9232d395660b2181ffda731002fb74da54e87b6f25d"
+    },
+    {
+      "dataset": "yambda",
+      "remote_path": "album_item_mapping.parquet",
+      "local_path": "yambda/album_item_mapping.parquet",
+      "url": "https://huggingface.co/datasets/yandex/yambda/resolve/dd6f3a19eef5866e346c3270e098baa641a44948/album_item_mapping.parquet",
+      "expected_size": 54528894,
+      "expected_sha256": "559b6576063d96280414574b32292eee7b47ee0b9f2952cb3ae670a5d19125e4"
+    }
+  ],
+  "extracted_files": [
+    {
+      "path": "data/raw/kion/data_original/interactions.csv",
+      "bytes": 180032258,
+      "sha256": "201dc9114eb309da9df6f5f227ada23a371d668edf64a32090fb613a75162ecf",
+      "zip_crc_verified": true
+    },
+    {
+      "path": "data/raw/kion/data_original/users.csv",
+      "bytes": 29945389,
+      "sha256": "37b2945240628a3f215e1fb5f79b4cff386d8988b21fa61e5b135aef4541182c",
+      "zip_crc_verified": true
+    },
+    {
+      "path": "data/raw/kion/data_original/items.csv",
+      "bytes": 31836561,
+      "sha256": "027c3a0027b4fe4a8db9d5fa626ab40bab507c96aac81d462db0771eb2cb4a8e",
+      "zip_crc_verified": true
+    }
+  ],
+  "completed_at_utc": "2026-10-25T11:57:44.308382+00:00"
+}

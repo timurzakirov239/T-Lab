@@ -1,0 +1,19 @@
+{
+  "status": "verified",
+  "experiment": "P006",
+  "archive_path": "artifacts/p006_frozen_inputs.zip",
+  "archive_repo_relative_path": "task_01_auto_features/artifacts/p006_frozen_inputs.zip",
+  "archive_sha256": "a9d52829caac1687169356984fbd63b72aa14030e9689897b73b11119314c6b6",
+  "archive_bytes": 94223917,
+  "archive_member_count": 74,
+  "manifest_file_count": 72,
+  "uncompressed_bytes": 575520697,
+  "manifest_sha256": "000f9a8bac45c15ae1a52a71a0e36b944f4ce6a1f4d9cb6127f882cc27b8a6dd",
+  "requirements_lock_path": "task_01_auto_features/requirements-pilot.lock.txt",
+  "compression": "ZIP_DEFLATED",
+  "compression_level": 1,
+  "zip_crc_check": "passed",
+  "frozen_manifest_sha256_checks": "72/72 passed",
+  "event_payload_decoded": false,
+  "test_outputs_or_reservation_markers_included": false
+}

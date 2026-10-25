@@ -1,0 +1,172 @@
+{
+  "label": "Popularity",
+  "stage": "final_test",
+  "evaluation_period": "test",
+  "columns": [],
+  "feature_count": 0,
+  "prediction_file": "predictions\\Popularity.npz",
+  "prediction_sha256": "b58ae33ac36a25b9cbda722e9a6b57a0868a84e9a1f73c27a5d29dbdd3582b1f",
+  "metrics": {
+    "overall": {
+      "query_count": 584,
+      "user_count": 60,
+      "target_known_before_count": 489,
+      "target_known_before_fraction": 0.8373287671232876,
+      "repeat_count": 363,
+      "repeat_fraction": 0.6215753424657534,
+      "candidate_recall": 0.273972602739726,
+      "query_micro": {
+        "recall@10": 0.0017123287671232876,
+        "ndcg@10": 0.0008561643835616438,
+        "recall@20": 0.003424657534246575,
+        "ndcg@20": 0.0013338064137861812
+      },
+      "user_macro": {
+        "recall@10": 0.0016666666666666668,
+        "ndcg@10": 0.0008333333333333334,
+        "recall@20": 0.0033333333333333335,
+        "ndcg@20": 0.0012982382427518832
+      }
+    },
+    "by_split": {
+      "train": {
+        "query_count": 0,
+        "user_count": 0,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": null,
+        "repeat_count": 0,
+        "repeat_fraction": null,
+        "candidate_recall": null,
+        "query_micro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        },
+        "user_macro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        }
+      },
+      "validation": {
+        "query_count": 584,
+        "user_count": 60,
+        "target_known_before_count": 489,
+        "target_known_before_fraction": 0.8373287671232876,
+        "repeat_count": 363,
+        "repeat_fraction": 0.6215753424657534,
+        "candidate_recall": 0.273972602739726,
+        "query_micro": {
+          "recall@10": 0.0017123287671232876,
+          "ndcg@10": 0.0008561643835616438,
+          "recall@20": 0.003424657534246575,
+          "ndcg@20": 0.0013338064137861812
+        },
+        "user_macro": {
+          "recall@10": 0.0016666666666666668,
+          "ndcg@10": 0.0008333333333333334,
+          "recall@20": 0.0033333333333333335,
+          "ndcg@20": 0.0012982382427518832
+        }
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 363,
+        "user_count": 56,
+        "target_known_before_count": 363,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 363,
+        "repeat_fraction": 1.0,
+        "candidate_recall": 0.42699724517906334,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0027548209366391185,
+          "ndcg@20": 0.0007684378668075203
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0035714285714285718,
+          "ndcg@20": 0.0009962248058968924
+        }
+      },
+      "new": {
+        "query_count": 221,
+        "user_count": 53,
+        "target_known_before_count": 126,
+        "target_known_before_fraction": 0.5701357466063348,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.02262443438914027,
+        "query_micro": {
+          "recall@10": 0.004524886877828055,
+          "ndcg@10": 0.0022624434389140274,
+          "recall@20": 0.004524886877828055,
+          "ndcg@20": 0.0022624434389140274
+        },
+        "user_macro": {
+          "recall@10": 0.0023584905660377358,
+          "ndcg@10": 0.0011792452830188679,
+          "recall@20": 0.0023584905660377358,
+          "ndcg@20": 0.0011792452830188679
+        }
+      },
+      "warm": {
+        "query_count": 489,
+        "user_count": 60,
+        "target_known_before_count": 489,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 363,
+        "repeat_fraction": 0.7423312883435583,
+        "candidate_recall": 0.32719836400818,
+        "query_micro": {
+          "recall@10": 0.002044989775051125,
+          "ndcg@10": 0.0010224948875255625,
+          "recall@20": 0.00408997955010225,
+          "ndcg@20": 0.0015929303592047645
+        },
+        "user_macro": {
+          "recall@10": 0.0027777777777777775,
+          "ndcg@10": 0.0013888888888888887,
+          "recall@20": 0.00462962962962963,
+          "ndcg@20": 0.0019054498993539442
+        }
+      },
+      "cold": {
+        "query_count": 95,
+        "user_count": 36,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": 0.0,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 584,
+      "users": 60,
+      "target_known_before": 489,
+      "target_not_known_before": 95,
+      "repeat_targets": 363,
+      "new_targets": 221,
+      "targets_in_candidates": 160,
+      "targets_missing_from_candidates": 424
+    }
+  }
+}

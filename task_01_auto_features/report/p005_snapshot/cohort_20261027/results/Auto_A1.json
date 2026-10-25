@@ -1,0 +1,213 @@
+{
+  "label": "Auto_A1",
+  "stage": "final",
+  "columns": [
+    1,
+    5,
+    6,
+    18,
+    26,
+    30,
+    40,
+    65
+  ],
+  "spec_ids": [
+    "u_listen_all",
+    "u_listen_short",
+    "u_like_short",
+    "i_last_age",
+    "d_events_short",
+    "d_last_age",
+    "c_artist_events_short_max",
+    "c_album_knownshare"
+  ],
+  "feature_count": 8,
+  "training": {
+    "queries_requested": 1397,
+    "queries_with_target": 336,
+    "queries_missing_target": 1061,
+    "target_coverage": 0.24051539012168932,
+    "candidate_rows_examined": 139700,
+    "candidate_rows_used": 33600,
+    "positive_rows": 336
+  },
+  "fit_seconds": 0.552426,
+  "predict_evaluate_seconds": 0.132043,
+  "importance_fit_only": [
+    13.268811554666822,
+    11.675084092858441,
+    5.016422974075058,
+    21.85030524401053,
+    16.587867632905947,
+    9.824552695744773,
+    12.241972508792054,
+    9.534983296946393
+  ],
+  "metrics": {
+    "overall": {
+      "query_count": 518,
+      "user_count": 53,
+      "target_known_before_count": 461,
+      "target_known_before_fraction": 0.88996138996139,
+      "repeat_count": 309,
+      "repeat_fraction": 0.5965250965250966,
+      "candidate_recall": 0.21428571428571427,
+      "query_micro": {
+        "recall@10": 0.12162162162162163,
+        "ndcg@10": 0.06213206268073248,
+        "recall@20": 0.1525096525096525,
+        "ndcg@20": 0.07016503971836294
+      },
+      "user_macro": {
+        "recall@10": 0.11886792452830189,
+        "ndcg@10": 0.06072529899739515,
+        "recall@20": 0.14905660377358493,
+        "ndcg@20": 0.06857639730964527
+      }
+    },
+    "by_split": {
+      "train": {
+        "query_count": 0,
+        "user_count": 0,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": null,
+        "repeat_count": 0,
+        "repeat_fraction": null,
+        "candidate_recall": null,
+        "query_micro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        },
+        "user_macro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        }
+      },
+      "validation": {
+        "query_count": 518,
+        "user_count": 53,
+        "target_known_before_count": 461,
+        "target_known_before_fraction": 0.88996138996139,
+        "repeat_count": 309,
+        "repeat_fraction": 0.5965250965250966,
+        "candidate_recall": 0.21428571428571427,
+        "query_micro": {
+          "recall@10": 0.12162162162162163,
+          "ndcg@10": 0.06213206268073248,
+          "recall@20": 0.1525096525096525,
+          "ndcg@20": 0.07016503971836294
+        },
+        "user_macro": {
+          "recall@10": 0.11886792452830189,
+          "ndcg@10": 0.06072529899739515,
+          "recall@20": 0.14905660377358493,
+          "ndcg@20": 0.06857639730964527
+        }
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 309,
+        "user_count": 48,
+        "target_known_before_count": 309,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 309,
+        "repeat_fraction": 1.0,
+        "candidate_recall": 0.35275080906148865,
+        "query_micro": {
+          "recall@10": 0.20388349514563106,
+          "ndcg@10": 0.10415666171074249,
+          "recall@20": 0.255663430420712,
+          "ndcg@20": 0.11762294684178638
+        },
+        "user_macro": {
+          "recall@10": 0.19769345238095237,
+          "ndcg@10": 0.10238622800714736,
+          "recall@20": 0.24886739417989415,
+          "ndcg@20": 0.11569306815210444
+        }
+      },
+      "new": {
+        "query_count": 209,
+        "user_count": 51,
+        "target_known_before_count": 152,
+        "target_known_before_fraction": 0.7272727272727273,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.009569377990430622,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      },
+      "warm": {
+        "query_count": 461,
+        "user_count": 53,
+        "target_known_before_count": 461,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 309,
+        "repeat_fraction": 0.6702819956616052,
+        "candidate_recall": 0.24078091106290672,
+        "query_micro": {
+          "recall@10": 0.13665943600867678,
+          "ndcg@10": 0.06981433507292718,
+          "recall@20": 0.17136659436008678,
+          "ndcg@20": 0.07884054354471148
+        },
+        "user_macro": {
+          "recall@10": 0.1296945193171608,
+          "ndcg@10": 0.06701851880548182,
+          "recall@20": 0.16187481281820904,
+          "ndcg@20": 0.07540345749195491
+        }
+      },
+      "cold": {
+        "query_count": 57,
+        "user_count": 33,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": 0.0,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 518,
+      "users": 53,
+      "target_known_before": 461,
+      "target_not_known_before": 57,
+      "repeat_targets": 309,
+      "new_targets": 209,
+      "targets_in_candidates": 111,
+      "targets_missing_from_candidates": 407
+    }
+  },
+  "prediction_file": "predictions\\Auto_A1.npz",
+  "prediction_sha256": "5141f2db034722ce43d7ca126fa62e5008c9306c22d8a711c2cc2e1c4a8e779b",
+  "model_file": "models\\Auto_A1.cbm",
+  "model_sha256": "8b4c4213f25a52553b8e8aed028bc20dd4d28582cfc03a0d00e8826587b2a392"
+}

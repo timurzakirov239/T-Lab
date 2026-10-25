@@ -1,0 +1,213 @@
+{
+  "label": "inner_A2_top8",
+  "stage": "inner",
+  "columns": [
+    18,
+    127,
+    128,
+    133,
+    169,
+    174,
+    180,
+    182
+  ],
+  "spec_ids": [
+    "i_last_age",
+    "u_dislike_share_w670390",
+    "i_listen_share_all",
+    "i_dislike_share_w670390",
+    "u_listen_trend_w2011171",
+    "i_events_trend_w2011171",
+    "d_events_trend_w2011171",
+    "c_artist_events_trend_w201117_max"
+  ],
+  "feature_count": 8,
+  "training": {
+    "queries_requested": 977,
+    "queries_with_target": 247,
+    "queries_missing_target": 730,
+    "target_coverage": 0.25281473899692936,
+    "candidate_rows_examined": 97700,
+    "candidate_rows_used": 24700,
+    "positive_rows": 247
+  },
+  "fit_seconds": 0.528334,
+  "predict_evaluate_seconds": 0.111426,
+  "importance_fit_only": [
+    15.434367262914687,
+    9.117293761950393,
+    7.357116634328406,
+    9.501052943247046,
+    8.179026368775773,
+    9.537792676022361,
+    21.679371114940725,
+    19.193979237820596
+  ],
+  "metrics": {
+    "overall": {
+      "query_count": 420,
+      "user_count": 41,
+      "target_known_before_count": 376,
+      "target_known_before_fraction": 0.8952380952380953,
+      "repeat_count": 179,
+      "repeat_fraction": 0.4261904761904762,
+      "candidate_recall": 0.2119047619047619,
+      "query_micro": {
+        "recall@10": 0.07857142857142857,
+        "ndcg@10": 0.04271042345291578,
+        "recall@20": 0.10476190476190476,
+        "ndcg@20": 0.04938142815890683
+      },
+      "user_macro": {
+        "recall@10": 0.08229415000916925,
+        "ndcg@10": 0.03852495683001898,
+        "recall@20": 0.11379821504981967,
+        "ndcg@20": 0.04663598646495199
+      }
+    },
+    "by_split": {
+      "train": {
+        "query_count": 420,
+        "user_count": 41,
+        "target_known_before_count": 376,
+        "target_known_before_fraction": 0.8952380952380953,
+        "repeat_count": 179,
+        "repeat_fraction": 0.4261904761904762,
+        "candidate_recall": 0.2119047619047619,
+        "query_micro": {
+          "recall@10": 0.07857142857142857,
+          "ndcg@10": 0.04271042345291578,
+          "recall@20": 0.10476190476190476,
+          "ndcg@20": 0.04938142815890683
+        },
+        "user_macro": {
+          "recall@10": 0.08229415000916925,
+          "ndcg@10": 0.03852495683001898,
+          "recall@20": 0.11379821504981967,
+          "ndcg@20": 0.04663598646495199
+        }
+      },
+      "validation": {
+        "query_count": 0,
+        "user_count": 0,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": null,
+        "repeat_count": 0,
+        "repeat_fraction": null,
+        "candidate_recall": null,
+        "query_micro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        },
+        "user_macro": {
+          "recall@10": null,
+          "ndcg@10": null,
+          "recall@20": null,
+          "ndcg@20": null
+        }
+      }
+    },
+    "strata": {
+      "repeat": {
+        "query_count": 179,
+        "user_count": 38,
+        "target_known_before_count": 179,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 179,
+        "repeat_fraction": 1.0,
+        "candidate_recall": 0.39106145251396646,
+        "query_micro": {
+          "recall@10": 0.1787709497206704,
+          "ndcg@10": 0.09822441711238326,
+          "recall@20": 0.2346368715083799,
+          "ndcg@20": 0.11231871337419955
+        },
+        "user_macro": {
+          "recall@10": 0.17615392648287387,
+          "ndcg@10": 0.0955522256972948,
+          "recall@20": 0.22312552213868003,
+          "ndcg@20": 0.10747645308617063
+        }
+      },
+      "new": {
+        "query_count": 241,
+        "user_count": 31,
+        "target_known_before_count": 197,
+        "target_known_before_fraction": 0.8174273858921162,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.07883817427385892,
+        "query_micro": {
+          "recall@10": 0.004149377593360996,
+          "ndcg@10": 0.001478038120780175,
+          "recall@20": 0.008298755186721992,
+          "ndcg@20": 0.002635477729291087
+        },
+        "user_macro": {
+          "recall@10": 0.002304147465437788,
+          "ndcg@10": 0.0008207538873456732,
+          "recall@20": 0.003706672009617311,
+          "ndcg@20": 0.0012119782150471175
+        }
+      },
+      "warm": {
+        "query_count": 376,
+        "user_count": 41,
+        "target_known_before_count": 376,
+        "target_known_before_fraction": 1.0,
+        "repeat_count": 179,
+        "repeat_fraction": 0.47606382978723405,
+        "candidate_recall": 0.23670212765957446,
+        "query_micro": {
+          "recall@10": 0.08776595744680851,
+          "ndcg@10": 0.047708451729320804,
+          "recall@20": 0.11702127659574468,
+          "ndcg@20": 0.055160105922183164
+        },
+        "user_macro": {
+          "recall@10": 0.09397284351516347,
+          "ndcg@10": 0.04455560903347325,
+          "recall@20": 0.126566242464373,
+          "ndcg@20": 0.05295451814168532
+        }
+      },
+      "cold": {
+        "query_count": 44,
+        "user_count": 17,
+        "target_known_before_count": 0,
+        "target_known_before_fraction": 0.0,
+        "repeat_count": 0,
+        "repeat_fraction": 0.0,
+        "candidate_recall": 0.0,
+        "query_micro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        },
+        "user_macro": {
+          "recall@10": 0.0,
+          "ndcg@10": 0.0,
+          "recall@20": 0.0,
+          "ndcg@20": 0.0
+        }
+      }
+    },
+    "counts": {
+      "queries": 420,
+      "users": 41,
+      "target_known_before": 376,
+      "target_not_known_before": 44,
+      "repeat_targets": 179,
+      "new_targets": 241,
+      "targets_in_candidates": 89,
+      "targets_missing_from_candidates": 331
+    }
+  },
+  "prediction_file": "predictions\\inner_A2_top8.npz",
+  "prediction_sha256": "677738d938830cd73257e1b446744b03a7c4b0b22dfa1e5855fdf13241d4d9be",
+  "model_file": "models\\inner_A2_top8.cbm",
+  "model_sha256": "b1ed2b76164af8d0499577bbde48796ba6fd0ab865bb66ebd4c638c17e2cae47"
+}

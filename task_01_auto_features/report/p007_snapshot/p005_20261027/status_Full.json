@@ -1,0 +1,64 @@
+{
+  "experiment": "P007",
+  "cohort": "p005_20261027",
+  "stage": "full_catalog",
+  "status": "complete",
+  "final_test_evaluated": false,
+  "selection_frozen_sha256": "be6b87dcfaaf1e692affe7ae6f8da97bf324a394e6627c9a56b57db32ed52c40",
+  "gate_directory": "catalog_gate_v3",
+  "config_sha256": "9b1ef366ee314dd05ce22d29be48ff56f707963f3c53373560005e940ccd7640",
+  "protocol_sha256": "e6cd93b6fb6dccd554b982e86b051e247132415f343bb33bfdcb4388837c1afd",
+  "source_sha256": {
+    "expanded_vector_features.py": "8e9390d21c6132a41c28ca6c0e4c2e06ea8068601c252edba8afaeb607bb2e7b",
+    "expanded_catalog.py": "7bf33e8bdd2033f98e40601845e49b5bbb73c914d7b27269b6a562aec4ccb008",
+    "run_expanded_catalog.py": "a50da6bdcbbe81401db4731a4f4307f280abaeed1d341c4d61ea5a6ca9494e7e",
+    "expanded_metrics.py": "286d555f8a1e81b7b96dd8409968ece696fa43b9cfb30776ff4207f07fcf4f3e"
+  },
+  "progress": {
+    "queries_completed": 518,
+    "cells_compared": 10670800,
+    "catalog_rows_scored": 20192615
+  },
+  "inputs_sha256": {
+    "artifacts/p005_robustness/cohort_20261027/features.npy": "a54fc7c59ccca26703c28b4f4452e203efb1eeb9edfcfd90037d1cf3f3f8962f",
+    "artifacts/p005_robustness/cohort_20261027/feature_inputs.jsonl": "2449eef7ac8f0bc1f932be64cbd41ddec9478dbd63a657278a0d1f8ad61355a2",
+    "artifacts/p005_robustness/cohort_20261027/feature_schema.json": "e365ef4f953fa98f92e4a58b50d4ef3085632e6708a232fb6f34ca8889181e09",
+    "artifacts/p005_robustness/cohort_20261027/selection_frozen.json": "bf577f17aaaf08098f75e6089db13ffdecafb74adf64db3badaa29595a4f29bf",
+    "artifacts/p005_robustness/cohort_20261027/queries.jsonl": "fb769e2d52dd79d2f55c9631c1a4b8b0446091f97756d01b26a16ee7bbd50613",
+    "artifacts/p005_robustness/cohort_20261027/data/events_full.parquet": "e4c4d85e04b460b97ff6382db7213662e8661c759d53e2614e832943e4724603"
+  },
+  "exact_gate": {
+    "identical_float32_bytes": true,
+    "cells": 10670800,
+    "values_sha256": "a91684b1180fb4bdced4eddabe33a260488ca899eb133b4d451c92a712cea36e",
+    "queries": 518
+  },
+  "catalog_size": {
+    "min": 35614,
+    "max": 42345,
+    "mean": 38981.88223938224
+  },
+  "output_sha256": {
+    "ForwardGroups66.jsonl": "7c0e62d4a71b94db655e54ee913bbd84adbaca4e7c713fa5797b6079736fd5be",
+    "M_I.jsonl": "c8fdd3a17dc8b028b489f2622e46d637e7ab27cb590798cb48dc311af7a2cc23",
+    "M_UIDC.jsonl": "4cbdfe0d61b97dc5c0fea78d9b8778fd2870eaab111b7645ede3db354d4f2d57",
+    "Original_A1.jsonl": "cf64a5e04c5b539fc424810014fcbb386341ab37fb09148a32c12cd26a117b6d",
+    "Original_A2.jsonl": "2c6a0785babcd0652aabd7210d6778572c4f2e8e75ce3a415def9e90f0a805da",
+    "Permutation206.jsonl": "d5314dfdaadf250d5b452e6b8ff99e9dfc7f550b2dc5693f89596a25b51b5f8b",
+    "Popularity.jsonl": "1f210bcf3d7a2cb6f2d80700a300f479e3143142344d7a7d0a8eddb901ca1023",
+    "Random206.jsonl": "7c6bb73624d1c95043952779e040ee2024978842c13ea196aaa460f7eaa3c666",
+    "Stable206.jsonl": "2e0eb09c234d1c98dd1b4bc8e42249a305f73aa4fd054d6a47f09bd9bafeddd5"
+  },
+  "all_k100_scores_exact": true,
+  "elapsed_seconds": 645.981967,
+  "resources": {
+    "peak_process_rss_mb": 772.75,
+    "minimum_available_system_mb": 2026.55,
+    "sampling_interval_seconds": 0.25,
+    "limits": {
+      "runner_peak_rss_mb": 1100,
+      "minimum_available_mb": 150
+    },
+    "limit_exceeded": null
+  }
+}

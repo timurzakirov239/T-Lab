@@ -1,0 +1,40 @@
+# Исходные данные и результаты экспериментов могут быть большими.
+**/data/raw/**
+!**/data/raw/**/
+!**/data/raw/**/.gitkeep
+**/data/processed/**
+!**/data/processed/**/
+!**/data/processed/**/.gitkeep
+**/artifacts/**
+!**/artifacts/**/
+!**/artifacts/**/.gitkeep
+
+# Локальные окружения и кеши Python.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+/backups/
+*.log
+
+# Локальное состояние окон Obsidian; общие настройки хранилища сохраняем.
+**/.obsidian/workspace*.json
+**/.obsidian/cache/
+**/.obsidian/workspaces.json
+**/.obsidian/plugins/
+.trash/
+
+# Local submission delivery and PDF previews; published as release assets.
+/output/
+/tmp/
+
+# Three original compact P006 logs are required by its frozen evidence manifest.
+!task_01_auto_features/report/p006_snapshot/p001/p001.log
+!task_01_auto_features/report/p006_snapshot/p005_20261026/p005_20261026.log
+!task_01_auto_features/report/p006_snapshot/p005_20261027/p005_20261027.log

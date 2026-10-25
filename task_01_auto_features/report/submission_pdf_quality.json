@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "pages": 9,
+  "format": "A4",
+  "language": "Russian",
+  "pdf_sha256": "116cf015280a447a4544429020df0ae45afad3af76eacc3b616f86741dcb57a5",
+  "visual_review": "All 9 pages rendered and inspected; tables kept together, Cyrillic readable, graph embedded.",
+  "metric_tokens_checked": true,
+  "source_report": "report/SUBMISSION_REPORT_RU.md",
+  "unit_tests": {
+    "passed": 165,
+    "new_experiments_run": false
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "status": "PASS",
+  "scope": "Sources section added to report; external documentation and immutable project links",
+  "source_entries": 11,
+  "links": [
+    {
+      "url": "https://catboost.ai/docs/en/concepts/algorithm-main-stages",
+      "http_status": 200,
+      "bytes": 179242
+    },
+    {
+      "url": "https://catboost.ai/docs/en/concepts/fstr",
+      "http_status": 200,
+      "bytes": 212385
+    },
+    {
+      "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.bootstrap.html",
+      "http_status": 200,
+      "bytes": 76486
+    },
+    {
+      "url": "https://github.com/timurzakirov239/T-Lab/blob/ffb2ed54d8d59c293af1bdf25ad0a9f67c16bb4b/task_01_auto_features/configs/P008_PROTOCOL.md",
+      "http_status": 200,
+      "bytes": 261086
+    },
+    {
+      "url": "https://github.com/timurzakirov239/T-Lab/blob/ffb2ed54d8d59c293af1bdf25ad0a9f67c16bb4b/task_01_auto_features/src/auto_features.py",
+      "http_status": 200,
+      "bytes": 497937
+    },
+    {
+      "url": "https://github.com/timurzakirov239/T-Lab/blob/ffb2ed54d8d59c293af1bdf25ad0a9f67c16bb4b/task_01_auto_features/src/auto_search.py",
+      "http_status": 200,
+      "bytes": 460138
+    },
+    {
+      "url": "https://github.com/timurzakirov239/T-Lab/blob/ffb2ed54d8d59c293af1bdf25ad0a9f67c16bb4b/task_01_auto_features/src/expanded_search.py",
+      "http_status": 200,
+      "bytes": 407555
+    },
+    {
+      "url": "https://github.com/timurzakirov239/T-Lab/blob/ffb2ed54d8d59c293af1bdf25ad0a9f67c16bb4b/task_01_auto_features/src/final_test_analysis.py",
+      "http_status": 200,
+      "bytes": 312806
+    },
+    {
+      "url": "https://github.com/timurzakirov239/T-Lab/blob/ffb2ed54d8d59c293af1bdf25ad0a9f67c16bb4b/task_01_auto_features/src/pilot_evaluation.py",
+      "http_status": 200,
+      "bytes": 339694
+    },
+    {
+      "url": "https://github.com/timurzakirov239/T-Lab/blob/ffb2ed54d8d59c293af1bdf25ad0a9f67c16bb4b/task_01_auto_features/src/run_expanded_search.py",
+      "http_status": 200,
+      "bytes": 430503
+    },
+    {
+      "url": "https://github.com/timurzakirov239/T-Lab/blob/ffb2ed54d8d59c293af1bdf25ad0a9f67c16bb4b/task_01_auto_features/src/sampled_negatives.py",
+      "http_status": 200,
+      "bytes": 320156
+    },
+    {
+      "url": "https://huggingface.co/datasets/yandex/yambda/blob/dd6f3a19eef5866e346c3270e098baa641a44948/README.md",
+      "http_status": 200,
+      "bytes": 163805
+    },
+    {
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html",
+      "http_status": 200,
+      "bytes": 152666
+    },
+    {
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ndcg_score.html",
+      "http_status": 200,
+      "bytes": 122391
+    },
+    {
+      "url": "https://scikit-learn.org/stable/modules/grid_search.html#randomized-parameter-optimization",
+      "http_status": 200,
+      "bytes": 137995
+    },
+    {
+      "url": "https://scikit-learn.org/stable/modules/permutation_importance.html",
+      "http_status": 200,
+      "bytes": 61746
+    }
+  ],
+  "human_review": "Newly added references checked by tools; no new human-review confirmation recorded."
+}

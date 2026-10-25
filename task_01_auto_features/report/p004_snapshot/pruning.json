@@ -1,0 +1,446 @@
+{
+  "A1": {
+    "available": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      34,
+      36,
+      38,
+      40,
+      42,
+      44,
+      46,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "removed": [
+      {
+        "column": 9,
+        "reason": "constant",
+        "representative": null
+      },
+      {
+        "column": 19,
+        "reason": "constant",
+        "representative": null
+      },
+      {
+        "column": 33,
+        "reason": "duplicate",
+        "representative": 32
+      },
+      {
+        "column": 35,
+        "reason": "duplicate",
+        "representative": 34
+      },
+      {
+        "column": 37,
+        "reason": "duplicate",
+        "representative": 36
+      },
+      {
+        "column": 39,
+        "reason": "duplicate",
+        "representative": 38
+      },
+      {
+        "column": 41,
+        "reason": "duplicate",
+        "representative": 40
+      },
+      {
+        "column": 43,
+        "reason": "duplicate",
+        "representative": 42
+      },
+      {
+        "column": 45,
+        "reason": "duplicate",
+        "representative": 44
+      },
+      {
+        "column": 47,
+        "reason": "duplicate",
+        "representative": 46
+      }
+    ]
+  },
+  "A2": {
+    "available": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      34,
+      36,
+      38,
+      40,
+      42,
+      44,
+      46,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      92,
+      94,
+      96,
+      98,
+      100,
+      102,
+      104,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      142,
+      144,
+      146,
+      148,
+      150,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      184,
+      186,
+      188,
+      190,
+      192,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205
+    ],
+    "removed": [
+      {
+        "column": 9,
+        "reason": "constant",
+        "representative": null
+      },
+      {
+        "column": 19,
+        "reason": "constant",
+        "representative": null
+      },
+      {
+        "column": 33,
+        "reason": "duplicate",
+        "representative": 32
+      },
+      {
+        "column": 35,
+        "reason": "duplicate",
+        "representative": 34
+      },
+      {
+        "column": 37,
+        "reason": "duplicate",
+        "representative": 36
+      },
+      {
+        "column": 39,
+        "reason": "duplicate",
+        "representative": 38
+      },
+      {
+        "column": 41,
+        "reason": "duplicate",
+        "representative": 40
+      },
+      {
+        "column": 43,
+        "reason": "duplicate",
+        "representative": 42
+      },
+      {
+        "column": 45,
+        "reason": "duplicate",
+        "representative": 44
+      },
+      {
+        "column": 47,
+        "reason": "duplicate",
+        "representative": 46
+      },
+      {
+        "column": 91,
+        "reason": "duplicate",
+        "representative": 90
+      },
+      {
+        "column": 93,
+        "reason": "duplicate",
+        "representative": 92
+      },
+      {
+        "column": 95,
+        "reason": "duplicate",
+        "representative": 94
+      },
+      {
+        "column": 97,
+        "reason": "duplicate",
+        "representative": 96
+      },
+      {
+        "column": 99,
+        "reason": "duplicate",
+        "representative": 98
+      },
+      {
+        "column": 101,
+        "reason": "duplicate",
+        "representative": 100
+      },
+      {
+        "column": 103,
+        "reason": "duplicate",
+        "representative": 102
+      },
+      {
+        "column": 105,
+        "reason": "duplicate",
+        "representative": 104
+      },
+      {
+        "column": 141,
+        "reason": "duplicate",
+        "representative": 140
+      },
+      {
+        "column": 143,
+        "reason": "duplicate",
+        "representative": 142
+      },
+      {
+        "column": 145,
+        "reason": "duplicate",
+        "representative": 144
+      },
+      {
+        "column": 147,
+        "reason": "duplicate",
+        "representative": 146
+      },
+      {
+        "column": 149,
+        "reason": "duplicate",
+        "representative": 148
+      },
+      {
+        "column": 151,
+        "reason": "duplicate",
+        "representative": 150
+      },
+      {
+        "column": 183,
+        "reason": "duplicate",
+        "representative": 182
+      },
+      {
+        "column": 185,
+        "reason": "duplicate",
+        "representative": 184
+      },
+      {
+        "column": 187,
+        "reason": "duplicate",
+        "representative": 186
+      },
+      {
+        "column": 189,
+        "reason": "duplicate",
+        "representative": 188
+      },
+      {
+        "column": 191,
+        "reason": "duplicate",
+        "representative": 190
+      },
+      {
+        "column": 193,
+        "reason": "duplicate",
+        "representative": 192
+      }
+    ]
+  }
+}

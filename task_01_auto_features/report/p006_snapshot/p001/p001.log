@@ -1,0 +1,6 @@
+FEATURE BUILD automatic_engine: 116/584 queries, 281,600 past events
+FEATURE BUILD automatic_engine: 387/584 queries, 301,627 past events
+P006 M_I: features=12 NDCG20=0.101275
+P006 M_UIDC: features=66 NDCG20=0.096699
+P006 Auto_A1: features=16 NDCG20=0.104206
+P006 Auto_A2: features=8 NDCG20=0.101944

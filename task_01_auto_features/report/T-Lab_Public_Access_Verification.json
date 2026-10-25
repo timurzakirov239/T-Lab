@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "anonymous_access": true,
+  "public": true,
+  "main_files": [
+    "README.md"
+  ],
+  "release": "https://github.com/timurzakirov239/T-Lab/releases/tag/submission-v1.0",
+  "assets": [
+    {
+      "name": "SHA256SUMS.txt",
+      "sha256": "f3dd8b84df69b7bf06f830727ae1c5c865644c2b64233d2ff5f31310a4f242cf",
+      "bytes": 369,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.0/SHA256SUMS.txt"
+    },
+    {
+      "name": "T-Lab_Archive_Verification.json",
+      "sha256": "3b340be082a171a91022c57403343d148f41a3b12c2682fa99b64670ea3fe464",
+      "bytes": 2165,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.0/T-Lab_Archive_Verification.json"
+    },
+    {
+      "name": "T-Lab_Report_RU.md",
+      "sha256": "53b877dc80ee125047f4969a0f38183332753767afd44fc8ba643ced20a4bad6",
+      "bytes": 39215,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.0/T-Lab_Report_RU.md"
+    },
+    {
+      "name": "T-Lab_Report_RU.pdf",
+      "sha256": "116cf015280a447a4544429020df0ae45afad3af76eacc3b616f86741dcb57a5",
+      "bytes": 238867,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.0/T-Lab_Report_RU.pdf"
+    },
+    {
+      "name": "T-Lab_Source_and_Evidence.zip",
+      "sha256": "186e1b6206442caad9437bf42f6d433cae72c1383eeab979589a27584a4fa886",
+      "bytes": 3382135,
+      "url": "https://github.com/timurzakirov239/T-Lab/releases/download/submission-v1.0/T-Lab_Source_and_Evidence.zip"
+    }
+  ],
+  "readme_exact_report": true,
+  "chart_bytes_match": true
+}
