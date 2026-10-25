@@ -31,6 +31,34 @@ def load_ranks(folder,mode,label):
     return [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines()]
 
 
+def catalog_bridge(rows):
+    """Pair identical queries and count target outcomes, never catalog item overlap."""
+    result={}
+    for label in LABELS:
+        small=[r for r in rows if r['mode']=='K100' and r['model']==label]
+        full=[r for r in rows if r['mode']=='Full' and r['model']==label]
+        paired=paired_user_delta(small,full,allow_catalog_change=True)
+        by_key={(r['cohort'],r['query_id']):r for r in full}
+        pairs=[(r,by_key[(r['cohort'],r['query_id'])]) for r in small]
+        groups={}
+        for name,predicate in [('overall',lambda r:True),
+                               ('repeat',lambda r:r['target_is_repeat']),
+                               ('new',lambda r:not r['target_is_repeat'])]:
+            subset=[(a,b) for a,b in pairs if predicate(a)]
+            hit=lambda r:r['target_rank'] is not None and r['target_rank']<=20
+            recovered=lambda a,b:a['target_rank'] is None and b['target_rank'] is not None
+            groups[name]={
+                'queries':len(subset),
+                'targets_recovered':sum(recovered(a,b) for a,b in subset),
+                'recovered_targets_in_top20':sum(recovered(a,b) and hit(b) for a,b in subset),
+                'top20_hits_retained':sum(hit(a) and hit(b) for a,b in subset),
+                'top20_hits_lost':sum(hit(a) and not hit(b) for a,b in subset),
+                'top20_hits_gained':sum(not hit(a) and hit(b) for a,b in subset),
+                'targets_absent_from_full':sum(b['target_rank'] is None for a,b in subset)}
+        result[label]={'target_transitions':groups,'paired_full_minus_k100':paired}
+    return result
+
+
 def verify_snapshot(snapshot=SNAPSHOT):
     manifest=read(snapshot/'checkpoint_manifest.json')
     for relative,expected in manifest.items():
@@ -56,10 +84,13 @@ def verify_snapshot(snapshot=SNAPSHOT):
             metrics[mode][label]=summarize_ranks(group)
             if label not in ('Popularity','M_UIDC'):
                 paired[mode][label]=paired_user_delta(baseline,group)
-    if metrics!=stored['metrics'] or paired!=stored['paired_vs_manual']:
+    cohort_metrics={c:{mode:{label:summarize_ranks([r for r in rows if r['cohort']==c and r['mode']==mode and r['model']==label])
+                            for label in LABELS} for mode in ('K100','Full')} for c in COHORTS}
+    if (metrics!=stored['metrics'] or paired!=stored['paired_vs_manual'] or
+            cohort_metrics!=stored['cohort_metrics'] or catalog_bridge(rows)!=stored['catalog_bridge']):
         raise AssertionError('Portable recomputation differs')
     return {'status':'PASS','tracked_files':len(manifest),'rank_rows':len(rows),
-            'pooled_groups':18,'paired_user_comparisons':14,'datasets_or_models_read':False}
+            'pooled_groups':18,'cohort_groups':54,'paired_user_comparisons':23,'datasets_or_models_read':False}
 
 
 def create_snapshot():
@@ -69,7 +100,8 @@ def create_snapshot():
         raise ValueError('P007 requires independent complete verification')
     SNAPSHOT.mkdir()
     for source in [TASK/'configs/P007_PROTOCOL.md',TASK/'configs/p007_expanded.json',
-                   TASK/'research/P007_CODE_REVIEW.md',ROOT/'verification_independent.json']:
+                   TASK/'research/P007_CODE_REVIEW.md',TASK/'research/P007_K100_RESULT_REVIEW.md',
+                   ROOT/'verification_independent.json']:
         shutil.copyfile(source,SNAPSHOT/source.name)
     rows=[];cohort_status={}
     for cohort in COHORTS:
@@ -101,15 +133,18 @@ def create_snapshot():
         baseline=[r for r in rows if r['mode']==mode and r['model']=='M_UIDC']
         paired[mode]={label:paired_user_delta(baseline,[r for r in rows if r['mode']==mode and r['model']==label])
                       for label in LABELS if label not in ('Popularity','M_UIDC')}
+    cohort_metrics={c:{mode:{label:summarize_ranks([r for r in rows if r['cohort']==c and r['mode']==mode and r['model']==label])
+                            for label in LABELS} for mode in ('K100','Full')} for c in COHORTS}
     analysis={'experiment':'P007','status':'exploratory_complete','metrics':metrics,'paired_vs_manual':paired,
+              'cohort_metrics':cohort_metrics,'catalog_bridge':catalog_bridge(rows),
               'full_catalog_not_global_dataset':True,'final_test_evaluated':False}
     (SNAPSHOT/'analysis.json').write_text(json.dumps(analysis,indent=2)+'\n',encoding='utf-8')
     (SNAPSHOT/'README.md').write_text('# P007 — compact rank checkpoint\n\n'
-        'Three disjoint64-user development cohorts, all1531 original validation queries, K100 vs complete prior-observed cohort catalog. '
+        'Three disjoint 64-user development cohorts, all 1531 original validation queries, K100 vs complete prior-observed cohort catalog. '
         'No P006 test replay. Models trained on identical original conditional K100 rows; full evaluation is a fixed-model catalog bridge.\n\n'
         'The CSV contains one-based target ranks for nine methods and two catalog modes. Missing ranks remain zero in metric denominators. '
         'Raw histories, feature matrices, predictions and models are omitted. Local independent verification checked original prediction ranks, '
-        'top20 score evidence and catalog-superset invariants; portable verification checks hashes and recomputes metrics and descriptive bootstrap.\n\n'
+        'top20 score evidence and catalog-superset invariants; portable verification checks hashes and recomputes pooled/cohort metrics, target transitions and descriptive bootstrap.\n\n'
         'Run `python task_01_auto_features/src/report_expanded_search.py --verify` with NumPy only. '
         'Human source verification remains pending.\n',encoding='utf-8')
     manifest={p.relative_to(SNAPSHOT).as_posix():sha(p) for p in sorted(SNAPSHOT.rglob('*')) if p.is_file()}
@@ -140,7 +175,9 @@ def generate(analysis,statuses):
         'Все selectors выбираются только внутри train, затем masks фиксируются. '
         'Константы/дубли удаляются у новых206-pool selectors; ForwardGroups66 сохраняет состав ручных групп, '
         'как фиксированные manual controls. Stable проверяет два обучающих префикса, а не несколько независимых временных validation folds. '
-        'Перестановочная важность при коррелирующих признаках не является причинным вкладом.','',
+        'Перестановочная важность при коррелирующих признаках не является причинным вкладом. '
+        'Перестановка целых query blocks сохраняет позиции кандидатов внутри блока; '
+        'это конкретная схема perturbation, а не универсальная оценка важности.','',
         '## Одинаковое обучение, два каталога оценки','',
         'Все методы используют те же ограниченные train-query blocks K100, только когда target найден. '
         'CatBoost120/depth5/.07/l2=5/Balanced/2threads,seed20261025. '
@@ -170,6 +207,26 @@ def generate(analysis,statuses):
             'целевой трек в ранге. Для каждого target, уже присутствовавшего в K100, сохранённые scores совпали, '
             'а его Full rank не улучшился при расширении множества конкурентов. Отдельно возникают recovered targets, '
             'отсутствовавшие в K100. Не смешивать coverage query-micro с пользовательским Recall20.','',
+            '| Метод | Добавлено targets в каталог | Из добавленных в top20 | Прежних top20 попаданий вытеснено | Попаданий сохранено |',
+            '| --- | ---: | ---: | ---: | ---: |']
+    for label in LABELS:
+        t=analysis['catalog_bridge'][label]['target_transitions']['overall']
+        lines.append(f'| {label} | {t["targets_recovered"]} | {t["recovered_targets_in_top20"]} | {t["top20_hits_lost"]} | {t["top20_hits_retained"]} |')
+    lines+=['','Здесь считаются переходы **целевого трека** каждого запроса; это не пересечение списков рекомендованных объектов. '
+            'Из-за вложенности каталогов и точных scores прежний target вне top20 не может улучшить ранг; '
+            'все новые top20 попадания относятся к targets, отсутствовавшим в K100. '
+            'Это query counts. Разбиение repeat/new и парные user-bootstrap Full−K100 сохранены в `analysis.json`.','',
+            '## Различия между когортами','',
+            '| Метод | P001 K100 → Full NDCG20 | Seed26 K100 → Full | Seed27 K100 → Full |',
+            '| --- | ---: | ---: | ---: |']
+    for label in LABELS:
+        values=[]
+        for c in COHORTS:
+            m=analysis['cohort_metrics'][c]
+            values.append(f'{m["K100"][label]["overall"]["user_macro"]["ndcg@20"]:.6f} → {m["Full"][label]["overall"]["user_macro"]["ndcg@20"]:.6f}')
+        lines.append('| '+label+' | '+' | '.join(values)+' |')
+    lines+=['','Полные cohort-specific Recall/NDCG@10/@20 и strata доступны в snapshot; '
+            'pooled результат взвешивает представленных пользователей, а не три когорты поровну.','',
             '## Какие признаки выбраны','',
             '| Метод | Исходная когорта | Seed26 | Seed27 |','| --- | ---: | ---: | ---: |']
     selections={c:read(SNAPSHOT/c/'selection_frozen.json') for c in COHORTS}
@@ -178,6 +235,17 @@ def generate(analysis,statuses):
     lines+=['','Точные имена выбранных выражений и все inner trials — в cohort-specific '
             '`selection_frozen.json` внутри snapshot. Выбор зависит от когорты; число выбранных признаков '
             'не доказывает их индивидуальную полезность.','',
+            '| Метод | P001 U/I/D/C | Seed26 U/I/D/C | Seed27 U/I/D/C |',
+            '| --- | --- | --- | --- |']
+    for label in LABELS[1:]:
+        counts=[]
+        for c in COHORTS:
+            ids=selections[c]['spec_ids'][label]
+            counts.append('/'.join(str(sum(x.startswith(prefix) for x in ids)) for prefix in ('u_','i_','d_','c_')))
+        lines.append('| '+label+' | '+' | '.join(counts)+' |')
+    lines+=['','U — активность пользователя, I — характеристики/статистика объекта, '
+            'D — прямые взаимодействия user–item, C — связь пользователя с исполнителями/альбомами. '
+            'Статистики объекта через его категории (i_artist/i_album) относятся к I.','',
             '## Стоимость и проверка','',
             '| Когорта | Search+K100, с / MiB / fits | Exact gate, с / cells | Full, с / MiB | Catalog min–max |',
             '| --- | --- | --- | --- | --- |']
@@ -187,11 +255,32 @@ def generate(analysis,statuses):
             f'| {g["elapsed_seconds"]:.2f} / {g["exact_gate"]["cells"]} '
             f'| {f["elapsed_seconds"]:.2f} / {f["resources"]["peak_process_rss_mb"]:.2f} '
             f'| {f["catalog_size"]["min"]}–{f["catalog_size"]["max"]} |')
-    lines+=['','Все206 float32 значения исходных100 validation candidates проверены побайтно против frozen matrices '
+    lines+=['','| Когорта | Общий inner fit | Random subset fits | Stable prefix + subset fits | Permutation subset fits / perturbations | Forward fits | Final refits / aliases |',
+            '| --- | ---: | ---: | ---: | ---: | ---: | ---: |']
+    for c in COHORTS:
+        status=statuses[c]['K100'];attempts=status['attempts']
+        inner=[r for r in attempts if r['stage']=='inner']
+        count=lambda prefix:sum(r['label'].startswith(prefix) for r in inner)
+        perturbations=len(read(SNAPSHOT/c/'importance_diagnostics.json')['permutation'])
+        final=[r for r in attempts if r['stage']=='outer_validation']
+        aliases=sum('alias_of' in r for r in status['final_models'])
+        lines.append(f'| {c} | {count("common_full_inner")} | {count("Random206_")} '
+                     f'| {count("stable_early_prefix")} + {count("Stable206_")} '
+                     f'| {count("Permutation206_")} / {perturbations} | {count("Forward_")} | {len(final)} / {aliases} |')
+    lines+=['','Stable/Permutation дополнительно рассматривают общий full-inner mask без повторного fit; '
+        'одинаковые proposals дедуплицированы до обучения. Число perturbations — отдельные вызовы predict '
+        'на inner selection, плюс один baseline prediction. Оно не включено в число fits. '
+        'Полный журнал каждого fit, conditional train counts и его длительность сохранены в cohort status_K100.json.','',
+        'Все206 float32 значения исходных100 validation candidates проверены побайтно против frozen matrices '
         'до Full; при Full проверены те же строки внутри чанков и точные scores исходных моделей. '
         'Счётчики/связи кэшируются по префиксу/пользователю, output feature matrix ограничена2048строками; '
         'полной query×catalog×206 матрицы нет. Histories проверялись на SHA как байты, event payload для models '
         'фильтровался по development-boundary до Python-конвертации.','',
+        'Сохранены диагностические попытки перед Full: первый exact gate остановился на двух mean-trend '
+        'ячейках из-за различий CPython3.12 sum и NumPy reduction при компенсации дробных значений. '
+        'Исправление сохраняет порядок и семантику исходного суммирования; регрессионный тест воспроизводит случай. '
+        'Следующая gate-попытка прервана ради оптимизации повторных вычислений. Эти попытки не обучали модели '
+        'и не оценивали полный каталог; успешная попытка с новым ID сохранена отдельно.','',
         'Потолок search fits10 на новый метод, но фактические вычислительные бюджеты не равны: '
         'Permutation делает отдельные predictions для каждого признака; Stable использует дополнительный prefix fit; '
         'fixed manual не получает столько же попыток. Общий full-inner fit разделён между процедурами. '
@@ -213,7 +302,8 @@ def generate(analysis,statuses):
             'Эти эксперименты ещё не выполнены. Работа2 не начата.','',
             '## Материалы','',
             '- [Протокол](../configs/P007_PROTOCOL.md), [рецензия кода](../research/P007_CODE_REVIEW.md).',
-            '- [Компактные доказательства](p007_snapshot/README.md), [независимая проверка](p007_snapshot/verification_independent.json).',
+        '- [Компактные доказательства](p007_snapshot/README.md), [независимая проверка](p007_snapshot/verification_independent.json).',
+        '- Ранги за пределами20 записаны evaluator и защищены SHA; независимо восстановлены top20-метрики по score evidence. Полные векторы scores Full не сохранялись.',
             '- [Предыдущий итоговый отчёт P001–P006](FINAL_REPORT.md) сохранён как первая завершённая серия.',
             '- ИИ и Luna субагенты использованы для реализации/проверок; человеческая проверка источников по [чек-листу](HUMAN_REVIEW.md) остаётся ожидаемой.']
     lines=[re.sub(r'(?<=[А-Яа-яЁё])(?=\d)|(?<=\d)(?=[А-Яа-яЁё])', ' ', line) for line in lines]
